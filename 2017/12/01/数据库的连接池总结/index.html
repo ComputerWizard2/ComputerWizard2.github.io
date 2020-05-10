@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="代码," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数据库的连接池 首先这些有的需要jar包的都需要导入jar包比如说c3p0以及dbcp等我将以一下的方式来介绍他们的使用和简单的原理。他们这些连接池的实现都是基于实现java.sql包下的DataSource的接口来实现的，我们要明确 我们要明确数据库的连接池是分配管理数据的，可以重复使用一个数据库的资源，而不是不断重新建立   普通的连接池 对于数据库的普通连接     ‘ public sta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库的连接池总结">
+<meta property="og:url" content="http://yoursite.com/2017/12/01/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="数据库的连接池 首先这些有的需要jar包的都需要导入jar包比如说c3p0以及dbcp等我将以一下的方式来介绍他们的使用和简单的原理。他们这些连接池的实现都是基于实现java.sql包下的DataSource的接口来实现的，我们要明确 我们要明确数据库的连接池是分配管理数据的，可以重复使用一个数据库的资源，而不是不断重新建立   普通的连接池 对于数据库的普通连接     ‘ public sta">
+<meta property="og:image" content="http://img3.3lian.com/2014/f1/4/d/38.jpg">
+<meta property="article:published_time" content="2017-12-01T10:42:50.000Z">
+<meta property="article:modified_time" content="2017-12-01T13:25:54.000Z">
+<meta property="article:author" content="LuckYe">
+<meta property="article:tag" content="代码">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img3.3lian.com/2014/f1/4/d/38.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/01/数据库的连接池总结/"/>
+
+
+
+
+
+  <title>数据库的连接池总结 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/01/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库的连接池总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T18:42:50+08:00">
+                2017-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/01/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%80%BB%E7%BB%93/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/01/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="数据库的连接池"><a href="#数据库的连接池" class="headerlink" title="数据库的连接池"></a>数据库的连接池</h4><ul>
+<li><p>首先这些有的需要jar包的都需要导入jar包比如说c3p0以及dbcp等我将以一下的方式来介绍他们的使用和简单的原理。他们这些连接池的实现都是基于实现java.sql包下的DataSource的接口来实现的，我们要明确 <em>我们要明确数据库的连接池是分配管理数据的，可以重复使用一个数据库的资源，而不是不断重新建立</em></p>
+<blockquote>
+<ol>
+<li>普通的连接池</li>
+<li>对于数据库的普通连接</li>
+</ol>
+</blockquote>
+<p>  ‘ public static Connection connction() throws ClassNotFoundException, SQLException {<br>  //为接口附上实现类</p>
+<pre><code>Class.forName(&quot;oracle.jdbc.driver.OracleDriver&quot;);
+Connection connection = DriverManager.getConnection(&quot;jdbc:oracle:thin:@localhost:orcl&quot;, &quot;scott&quot;, &quot;123456&quot;);
+
+return connection;</code></pre><p>  }</p>
+<p>  public static void close(Connection connection, Statement statement, ResultSet resultSet) {</p>
+<pre><code>if (connection != null) {
+    try {
+        connection.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+}
+if (statement != null) {
+    try {
+        statement.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+}
+if (resultSet != null) {
+    try {
+        resultSet.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+}</code></pre><p>  }’</p>
+</li>
+</ul>
+<hr>
+<blockquote>
+<ol start="2">
+<li>利用连接池<br>将信息分装在properties文件中，程序程序中调</li>
+</ol>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">   ‘driver&#x3D;oracle.jdbc.driver.OracleDriver</span><br><span class="line">url&#x3D;jdbc:oracle:thin:@localhost:1521:orcl</span><br><span class="line">username&#x3D;scott</span><br><span class="line">password&#x3D;123456</span><br><span class="line">initSize&#x3D;10</span><br><span class="line">maxIdle&#x3D;8</span><br><span class="line">minIdle&#x3D;5</span><br><span class="line">maxActive&#x3D;20</span><br><span class="line">maxWait&#x3D;5000’</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>最后通过在程序里取得代码的代码块的进行获取poperties的值，付给datesource的实现类所需要的信息即可</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&#39;static &#123;</span><br><span class="line">		Properties properties &#x3D; new Properties();</span><br><span class="line">		try &#123;</span><br><span class="line">			properties.load(jdbcutil.class.getClassLoader().getResourceAsStream(&quot;jdbc.properties&quot;));</span><br><span class="line">			System.out.println(jdbcutil.class.getClassLoader().getResource(&quot;jdbc.properties&quot;));</span><br><span class="line">			dataSource &#x3D; new BasicDataSource();</span><br><span class="line">			String driver &#x3D; properties.getProperty(&quot;driver&quot;);</span><br><span class="line">			String url &#x3D; properties.getProperty(&quot;url&quot;);</span><br><span class="line">			System.out.println(url);</span><br><span class="line">			String username &#x3D; properties.getProperty(&quot;username&quot;);</span><br><span class="line">			String password &#x3D; properties.getProperty(&quot;password&quot;);</span><br><span class="line">			String initSize &#x3D; properties.getProperty(&quot;initSize&quot;);</span><br><span class="line">			String maxIdel &#x3D; properties.getProperty(&quot;maxIdel&quot;);</span><br><span class="line">			String minIdel &#x3D; properties.getProperty(&quot;minIdel&quot;);</span><br><span class="line">			String maxActive &#x3D; properties.getProperty(&quot;maxActive&quot;);</span><br><span class="line">			String maxWait &#x3D; properties.getProperty(&quot;maxWait&quot;);</span><br><span class="line">			dataSource &#x3D; new BasicDataSource();</span><br><span class="line">			if (driver !&#x3D; null &amp;&amp; !&quot;&quot;.equals(driver)) &#123;</span><br><span class="line">				System.out.println(driver);</span><br><span class="line">				dataSource.setDriverClassName(driver);</span><br><span class="line">			&#125;</span><br><span class="line">			if (url !&#x3D; null &amp;&amp; !&quot;&quot;.equals(url)) &#123;</span><br><span class="line">				dataSource.setUrl(url);</span><br><span class="line">			&#125;</span><br><span class="line">			if (username !&#x3D; null &amp;&amp; !&quot;&quot;.equals(username)) &#123;</span><br><span class="line">				dataSource.setUsername(username);</span><br><span class="line">			&#125;</span><br><span class="line">			if (password !&#x3D; null &amp;&amp; !&quot;&quot;.equals(password)) &#123;</span><br><span class="line">				dataSource.setPassword(password);</span><br><span class="line">			&#125;</span><br><span class="line">			if (initSize !&#x3D; null &amp;&amp; !&quot;&quot;.equals(initSize)) &#123;</span><br><span class="line">				dataSource.setInitialSize(Integer.parseInt(initSize));</span><br><span class="line">			&#125;</span><br><span class="line">			if (maxIdel !&#x3D; null &amp;&amp; !&quot;&quot;.equals(maxIdel)) &#123;</span><br><span class="line">				dataSource.setMaxIdle(Integer.parseInt(maxIdel));</span><br><span class="line">			&#125;</span><br><span class="line">			if (minIdel !&#x3D; null &amp;&amp; !&quot;&quot;.equals(minIdel)) &#123;</span><br><span class="line">				dataSource.setMinIdle(Integer.parseInt(minIdel));</span><br><span class="line">			&#125;</span><br><span class="line">			if (maxWait !&#x3D; null &amp;&amp; !&quot;&quot;.equals(maxWait)) &#123;</span><br><span class="line">				dataSource.setMaxWait(Integer.parseInt(maxWait));</span><br><span class="line">			&#125;</span><br><span class="line">			if (maxActive !&#x3D; null &amp;&amp; !&quot;&quot;.equals(maxActive)) &#123;</span><br><span class="line">				dataSource.setMaxActive(Integer.parseInt(maxActive));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;&#96;</span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<ol start="3">
+<li>另外就是通过c3p0的配置文件c3p0 的config.xml的文件中获得的参数只需呀在程序中DateSource d=new c3p0的实现类，通过观察我们可以得知其实在c3p0的内部就是通过代理的模式来实现的。主要dateresource 是一个接口，如果我们采用装饰者模式，我们需要实现接口中的所有的方法，这样不免有些麻烦发，而代理仅仅将对象以及方法和方法中的参数传递进去就可以了。</li>
+</ol>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">static &#123;</span><br><span class="line">		dataSource &#x3D; new ComboPooledDataSource(&quot;mvcapp&quot;);</span><br><span class="line">	&#125;&#39;</span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>JNDI 因为sun公司的开发的，所以兼容性相对要好，而且支持异步连接，并且支持高并发的应用环境</p>
+</blockquote>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">在tomcat的config配置文件中：配置环境：</span><br><span class="line">1.Tomcat--&gt;conf---&gt;context.xml</span><br><span class="line">  添加:</span><br><span class="line">  &lt;Resource name&#x3D;&quot;jdbc&#x2F;csdn&quot;  auth&#x3D;&quot;Container&quot;  type&#x3D;&quot;javax.sql.DataSource&quot;</span><br><span class="line">      maxActive&#x3D;&quot;100&quot; maxIdle&#x3D;&quot;30&quot; maxWait&#x3D;&quot;10000&quot; username&#x3D;&quot;root&quot; password&#x3D;&quot;ning&quot;</span><br><span class="line">      driverClassName&#x3D;&quot;com.mysql.jdbc.Driver&quot; url&#x3D;&quot;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;csdn&quot;&#x2F;&gt;</span><br><span class="line">      2 . 在we.xml的文件中进行配置</span><br><span class="line">      &lt;resource-ref&gt;</span><br><span class="line">     &lt;description&gt;mysql database connection&lt;&#x2F;description&gt;</span><br><span class="line">     &lt;res-ref-name&gt;jdbc&#x2F;csdn&lt;&#x2F;res-ref-name&gt;</span><br><span class="line">     &lt;res-type&gt;javax.sql.DataSource&lt;&#x2F;res-type&gt;</span><br><span class="line">     &lt;res-auth&gt;Container&lt;&#x2F;res-auth&gt;</span><br><span class="line">  &lt;&#x2F;resource-ref&gt;</span><br><span class="line">3.数据库进行连接</span><br><span class="line"> Context  context&#x3D;new InitialContext();</span><br><span class="line">       DataSource  dataSource&#x3D; (DataSource)context.lookup(&quot;java:comp&#x2F;env&#x2F;jdbc&#x2F;csdn&quot;);</span><br><span class="line">       Connection conn&#x3D;dataSource.getConnection();</span><br><span class="line">       out.print(conn);</span><br></pre></td></tr></table></figure>
+<p><img src="http://img3.3lian.com/2014/f1/4/d/38.jpg" alt="开心就好"></p>
+<h3 id="总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。"><a href="#总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。" class="headerlink" title="总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。"></a>总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%BB%A3%E7%A0%81/" rel="tag"># 代码</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/01/photo/" rel="next" title="photo">
+                <i class="fa fa-chevron-left"></i> photo
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/05/ajax%E4%BA%8C%E7%BA%A7%E8%81%94%E5%8A%A8%E8%8E%B7%E5%8F%96/" rel="prev" title="ajax二级联动获取">
+                ajax二级联动获取 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库的连接池"><span class="nav-number">1.</span> <span class="nav-text">数据库的连接池</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。"><span class="nav-number"></span> <span class="nav-text">总结：其实这几种的，你叫简单的是c3p0封装的比较好，只需要new出来对象就可以直接调用方法获取connection，这就是对数据库的连接池的一个小小的总结吧。</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-hibiki"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":false},"log":false});</script></body>
+</html>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="环境搭建  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991001">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring+redis+nginx实现session数据共享">
+<meta property="og:url" content="http://yoursite.com/2018/01/24/spring-redis-nginx%E5%AE%9E%E7%8E%B0session%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="环境搭建  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991001">
+<meta property="og:image" content="http://m.qpic.cn/psb?/V149uSbQ1Ub0e6/M3ffU4088xHOY.4t6ULDEvbLVmPYbibfPgwBB15pZIo!/b/dAcBAAAAAAAA&bo=bQLAAW0CwAERFyA!&rf=viewer_4">
+<meta property="article:published_time" content="2018-01-24T10:38:47.000Z">
+<meta property="article:modified_time" content="2018-01-24T10:39:14.000Z">
+<meta property="article:author" content="LuckYe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://m.qpic.cn/psb?/V149uSbQ1Ub0e6/M3ffU4088xHOY.4t6ULDEvbLVmPYbibfPgwBB15pZIo!/b/dAcBAAAAAAAA&bo=bQLAAW0CwAERFyA!&rf=viewer_4">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/24/spring-redis-nginx实现session数据共享/"/>
+
+
+
+
+
+  <title>spring+redis+nginx实现session数据共享 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/spring-redis-nginx%E5%AE%9E%E7%8E%B0session%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">spring+redis+nginx实现session数据共享</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T18:38:47+08:00">
+                2018-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/24/spring-redis-nginx%E5%AE%9E%E7%8E%B0session%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/24/spring-redis-nginx%E5%AE%9E%E7%8E%B0session%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>环境搭建</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br></pre></td><td class="code"><pre><span class="line">1.使用maven创建一个web项目</span><br><span class="line">	2.配置相关jar包，注意版本</span><br><span class="line">	&lt;!-- 从阿里云仓库下载 --&gt;</span><br><span class="line">	&lt;repositories&gt;</span><br><span class="line">		&lt;repository&gt;</span><br><span class="line">			&lt;id&gt;public&lt;&#x2F;id&gt;</span><br><span class="line">			&lt;name&gt;aliyun nexus&lt;&#x2F;name&gt;</span><br><span class="line">			&lt;url&gt;http:&#x2F;&#x2F;maven.aliyun.com&#x2F;nexus&#x2F;content&#x2F;groups&#x2F;public&#x2F;&lt;&#x2F;url&gt;</span><br><span class="line">			&lt;releases&gt;</span><br><span class="line">				&lt;enabled&gt;true&lt;&#x2F;enabled&gt;</span><br><span class="line">			&lt;&#x2F;releases&gt;</span><br><span class="line">		&lt;&#x2F;repository&gt;</span><br><span class="line">	&lt;&#x2F;repositories&gt;</span><br><span class="line">	&lt;!-- 相关jar包版本号 --&gt;</span><br><span class="line">	&lt;properties&gt;</span><br><span class="line">		&lt;!-- spring版本号 --&gt;</span><br><span class="line">		&lt;spring.version&gt;4.3.7.RELEASE&lt;&#x2F;spring.version&gt;</span><br><span class="line">		&lt;!-- mybatis版本号 --&gt;</span><br><span class="line">		&lt;mybatis.version&gt;3.4.2&lt;&#x2F;mybatis.version&gt;</span><br><span class="line">		&lt;mybatis-spring-version&gt;1.3.0&lt;&#x2F;mybatis-spring-version&gt;</span><br><span class="line">		&lt;!-- log4j日志文件管理包版本 --&gt;</span><br><span class="line">		&lt;slf4j.version&gt;1.7.7&lt;&#x2F;slf4j.version&gt;</span><br><span class="line">		&lt;log4j.version&gt;1.2.17&lt;&#x2F;log4j.version&gt;</span><br><span class="line">	&lt;&#x2F;properties&gt;</span><br><span class="line"></span><br><span class="line">	&lt;dependencies&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework.session&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-session&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;1.3.0.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;commons-beanutils&#x2F;commons-beanutils --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;commons-beanutils&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;commons-beanutils&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;1.9.3&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;com.fasterxml.jackson.dataformat&#x2F;jackson-dataformat-xml --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;com.fasterxml.jackson.dataformat&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;jackson-dataformat-xml&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.9.2&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework.data&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-data-redis&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;1.7.6.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;redis.clients&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;jedis&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.8.1&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- spring核心包 --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-core&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-web&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-oxm&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-tx&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-jdbc&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-webmvc&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-aop&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-context-support&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-test&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;spring.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- aop --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.aspectj&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;aspectjweaver&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;1.8.10&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- log start --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;log4j&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;log4j&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;log4j.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.slf4j&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;slf4j-api&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;slf4j.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.slf4j&lt;&#x2F;groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;slf4j-log4j12&lt;&#x2F;artifactId&gt;</span><br><span class="line">			&lt;version&gt;$&#123;slf4j.version&#125;&lt;&#x2F;version&gt;</span><br><span class="line">		&lt;&#x2F;dependency&gt;</span><br><span class="line">		&lt;!-- log end --&gt;</span><br><span class="line">	&lt;&#x2F;dependencies&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	3.创建spring配置文件，做redis基础配置，以及redis session配置</span><br><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans&quot;</span><br><span class="line">	xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot; xmlns:p&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;p&quot;</span><br><span class="line">	xmlns:context&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context&quot;</span><br><span class="line">	xmlns:mvc&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc&quot;</span><br><span class="line">	xsi:schemaLocation&#x3D;&quot;</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans&#x2F;spring-beans.xsd</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context&#x2F;spring-context.xsd</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc&#x2F;spring-mvc.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;context:component-scan base-package&#x3D;&quot;com.*&quot;&gt;&lt;&#x2F;context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">	&lt;bean id&#x3D;&quot;jedisConnectionFactory&quot;</span><br><span class="line">		class&#x3D;&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;</span><br><span class="line">		p:host-name&#x3D;&quot;192.168.1.23&quot; p:port&#x3D;&quot;6379&quot; &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;bean id&#x3D;&quot;redisTemplate&quot; class&#x3D;&quot;org.springframework.data.redis.core.StringRedisTemplate&quot;</span><br><span class="line">		p:connection-factory-ref&#x3D;&quot;jedisConnectionFactory&quot;&gt;</span><br><span class="line">	&lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">	&lt;bean id&#x3D;&quot;redisHttpSessionConfiguration&quot; class&#x3D;&quot;org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration&quot;&gt;</span><br><span class="line">        &lt;property name&#x3D;&quot;maxInactiveIntervalInSeconds&quot; value&#x3D;&quot;1800&quot;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;beans&gt;</span><br><span class="line"></span><br><span class="line">	4.在web.xml中增加springSession过滤器，要保证这个过滤器在所有过滤器的最前面</span><br><span class="line">	&lt;filter&gt;</span><br><span class="line">		&lt;filter-name&gt;springSessionRepositoryFilter&lt;&#x2F;filter-name&gt;</span><br><span class="line">		&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;&#x2F;filter-class&gt;</span><br><span class="line">	&lt;&#x2F;filter&gt;</span><br><span class="line">	&lt;filter-mapping&gt;</span><br><span class="line">		&lt;filter-name&gt;springSessionRepositoryFilter&lt;&#x2F;filter-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;&#x2F;*&lt;&#x2F;url-pattern&gt;</span><br><span class="line">		&lt;dispatcher&gt;REQUEST&lt;&#x2F;dispatcher&gt;</span><br><span class="line">		&lt;dispatcher&gt;ERROR&lt;&#x2F;dispatcher&gt;</span><br><span class="line">	&lt;&#x2F;filter-mapping&gt;</span><br><span class="line"></span><br><span class="line">	5.配置web环境</span><br><span class="line">	创建springmvc配置文件，等</span><br><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans&quot;</span><br><span class="line">    xmlns:xsi&#x3D;&quot;http:&#x2F;&#x2F;www.w3.org&#x2F;2001&#x2F;XMLSchema-instance&quot;</span><br><span class="line">    xmlns:p&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;p&quot;</span><br><span class="line">    xmlns:context&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context&quot;</span><br><span class="line">    xmlns:mvc&#x3D;&quot;http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc&quot;</span><br><span class="line">    xsi:schemaLocation&#x3D;&quot;</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;beans&#x2F;spring-beans.xsd</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;context&#x2F;spring-context.xsd</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc</span><br><span class="line">        http:&#x2F;&#x2F;www.springframework.org&#x2F;schema&#x2F;mvc&#x2F;spring-mvc.xsd&quot;&gt;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		&lt;!-- ************************** SpringMvc 必要配置  begin  **************************--&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;!-- 自动扫描 记得修改包的路径 --&gt;</span><br><span class="line">		&lt;context:component-scan base-package&#x3D;&quot;com&quot;&#x2F;&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;!-- 视图解析器 记得关注前缀 --&gt;</span><br><span class="line">		&lt;bean id&#x3D;&quot;jspViewResolver&quot; class&#x3D;&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</span><br><span class="line">			&lt;property name&#x3D;&quot;prefix&quot; value&#x3D;&quot;&#x2F;WEB-INF&#x2F;jsp&#x2F;&quot;&#x2F;&gt;</span><br><span class="line">			&lt;property name&#x3D;&quot;suffix&quot; value&#x3D;&quot;.jsp&quot;&#x2F;&gt;</span><br><span class="line">		&lt;&#x2F;bean&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;!-- 静态资源访问  --&gt;</span><br><span class="line">		&lt;mvc:default-servlet-handler&#x2F;&gt;</span><br><span class="line">		&lt;mvc:annotation-driven &#x2F;&gt;</span><br><span class="line">		</span><br><span class="line">&lt;&#x2F;beans&gt;</span><br><span class="line"></span><br><span class="line">在web.xml中增加配置</span><br><span class="line">&lt;!-- spring相关配置 --&gt;</span><br><span class="line">	&lt;!-- 保证在tomcat启动时容器就可以被初始化 --&gt;</span><br><span class="line">	&lt;listener&gt;</span><br><span class="line">		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;&#x2F;listener-class&gt;</span><br><span class="line">	&lt;&#x2F;listener&gt;</span><br><span class="line">	&lt;!-- 初始化容器时需要读取配置文件 --&gt;</span><br><span class="line">	&lt;context-param&gt;</span><br><span class="line">		&lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">		&lt;!-- spring配置文件的路径 --&gt;</span><br><span class="line">		&lt;param-value&gt;classpath*:spring-ioc.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">	&lt;&#x2F;context-param&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 内存清理 --&gt;</span><br><span class="line">	&lt;listener&gt;</span><br><span class="line">		&lt;listener-class&gt;org.springframework.web.util.IntrospectorCleanupListener&lt;&#x2F;listener-class&gt;</span><br><span class="line">	&lt;&#x2F;listener&gt;</span><br><span class="line"></span><br><span class="line">	&lt;servlet&gt;</span><br><span class="line">		&lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">		&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">		&lt;init-param&gt;</span><br><span class="line">			&lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">			&lt;param-value&gt;classpath:spring-mvc.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">		&lt;&#x2F;init-param&gt;</span><br><span class="line">		&lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">	&lt;&#x2F;servlet&gt;</span><br><span class="line">	&lt;servlet-mapping&gt;</span><br><span class="line">		&lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;&#x2F;&lt;&#x2F;url-pattern&gt;</span><br><span class="line">	&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>代码测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package com.controller;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line">import org.springframework.stereotype.Controller;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@Controller</span><br><span class="line">public class TestController &#123;</span><br><span class="line">	&#x2F;**</span><br><span class="line">	 * 向session中保存数据</span><br><span class="line">	 *&#x2F;</span><br><span class="line">	@RequestMapping(&quot;&#x2F;save&quot;)</span><br><span class="line">	</span><br><span class="line">	public String save(HttpSession session)&#123;</span><br><span class="line">	session.setAttribute(&quot;str&quot;, &quot;我是隔壁老王&quot;);</span><br><span class="line">		return &quot;test&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;**</span><br><span class="line">	 * 从session中获取数据</span><br><span class="line">	 *&#x2F;</span><br><span class="line">	@RequestMapping(&quot;&#x2F;get&quot;)</span><br><span class="line">	public String get(HttpSession session)&#123;</span><br><span class="line">		String  attribute &#x3D; (String) session.getAttribute(&quot;str&quot;);</span><br><span class="line">		System.out.println(attribute);</span><br><span class="line">		return &quot;test&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在虚拟机开启redis 和nginx tomcat <ul>
+<li>Linux的命令总结：<ul>
+<li>连接redis不成功可能是防火墙：(当然在公司不可能采用如此极端的方式)systemctl stop firewalld.service</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>- 查看所有一个应用的pid: ps -ef |grep ngix
+- 开启nginx:在nginx 的文件夹下进入到nginx 的sbin的目录下，开启nginx: ./nginx -t
+- 关闭nginx:查找进程号 pid 并且用pid kill -9 pid
+- 开启redis(相当于缓存存储数据)：redis-server /etc/redis/redis.conf
+- 关闭redis : kill -9 进程号 pid
+- 开启tomcat:进入到usr/local/tomcat/bin/start.h ---&gt; ./start.h
+- 开启tomcat的日志文件：usr/local/tomcat/logs/-----&gt; tail -f catalina.out
+- zookeeper的开启方式：进入到usr/local/zookeeper/bin  ----&gt; ./zkServer.sh start
+- 检验是否开启成功： netstat -ano|grep 2181 (任何应用的端口都可以查出来)</code></pre><p><img src="http://m.qpic.cn/psb?/V149uSbQ1Ub0e6/M3ffU4088xHOY.4t6ULDEvbLVmPYbibfPgwBB15pZIo!/b/dAcBAAAAAAAA&bo=bQLAAW0CwAERFyA!&rf=viewer_4" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/24/redis%E5%AE%9E%E7%8E%B0MQ/" rel="next" title="redis实现MQ">
+                <i class="fa fa-chevron-left"></i> redis实现MQ
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/26/ActiveMQ%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="prev" title="ActiveMQ实现消息队列">
+                ActiveMQ实现消息队列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-hibiki"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":false},"log":false});</script></body>
+</html>
