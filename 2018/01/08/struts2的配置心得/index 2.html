@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天对struts2有了一定的了解，首先配置貌似没有Spring那么复杂，我很开心，web.xml就配置了一个过滤器就可以，在他的jar里面已经分装好了两个配置文件（struts-default.xml，structs-plugn.xml两个配置文件）我们需要将我们需要的配置文件可以src下就可以了，或者可以自定义的方式也是可以的 struts.xml。    struct主要配置一个pack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="的配置心得">
+<meta property="og:url" content="http://yoursite.com/2018/01/08/struts2%E7%9A%84%E9%85%8D%E7%BD%AE%E5%BF%83%E5%BE%97/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="今天对struts2有了一定的了解，首先配置貌似没有Spring那么复杂，我很开心，web.xml就配置了一个过滤器就可以，在他的jar里面已经分装好了两个配置文件（struts-default.xml，structs-plugn.xml两个配置文件）我们需要将我们需要的配置文件可以src下就可以了，或者可以自定义的方式也是可以的 struts.xml。    struct主要配置一个pack">
+<meta property="article:published_time" content="2018-01-08T12:11:45.000Z">
+<meta property="article:modified_time" content="2018-01-08T12:12:28.000Z">
+<meta property="article:author" content="LuckYe">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/08/struts2的配置心得/"/>
+
+
+
+
+
+  <title>的配置心得 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/struts2%E7%9A%84%E9%85%8D%E7%BD%AE%E5%BF%83%E5%BE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">的配置心得</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-08T20:11:45+08:00">
+                2018-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/08/struts2%E7%9A%84%E9%85%8D%E7%BD%AE%E5%BF%83%E5%BE%97/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/08/struts2%E7%9A%84%E9%85%8D%E7%BD%AE%E5%BF%83%E5%BE%97/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><ol>
+<li>今天对struts2有了一定的了解，首先配置貌似没有Spring那么复杂，我很开心，web.xml就配置了一个过滤器就可以，在他的jar里面已经分装好了两个配置文件（struts-default.xml，structs-plugn.xml两个配置文件）我们需要将我们需要的配置文件可以src下就可以了，或者可以自定义的方式也是可以的 struts.xml。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>struct主要配置一个package的而他需要继承原生的struts-default 他的子标签就是我们的action完全是以类的形式来展现的。在action的里面还有子标签result ，我们根据action返回的字符串的形式可以选择跳转到不同的页面，这就完成了整个一个请求到一个页面的整个过程。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>在这个过程我们是通过在action里面设置全局变量，来获取整个请求传递过来的参数的。当然这个实体类一定要有get和set的方法，而当使用这个实体类的时候，一定要使用这个声明的变量。</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br></pre></td><td class="code"><pre><span class="line">非表单标签（重要）</span><br><span class="line">	1.在页面中要使用标签的话，首先需要导入标签库</span><br><span class="line">	&lt;%@ taglib prefix&#x3D;&quot;s&quot; uri&#x3D;&quot;&#x2F;struts-tags&quot; %&gt;</span><br><span class="line"></span><br><span class="line">6.1 property（重要）</span><br><span class="line">&lt;!-- </span><br><span class="line">		s:property 标签 取值 （可以获取request中的数据，也可以获取session中的）</span><br><span class="line">		用法：</span><br><span class="line">			如果获取的是Action中的某个变量，那么直接写变量名即可</span><br><span class="line">			如果该变量存在于Action类中，那么在获取时直接写变量即可，</span><br><span class="line">			如果不存在于Action类中，那么在获取时需要在变量名前添加#</span><br><span class="line">			获取session中的数据时，也需要加#</span><br><span class="line">	--&gt;</span><br><span class="line">	&lt;h1&gt;property标签：&lt;s:property value&#x3D;&quot;stuModel.stuName&quot;&#x2F;&gt;&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">6.2 url（重要）</span><br><span class="line">	&lt;!-- </span><br><span class="line">		s:url 用来生成访问路径，可以配合a标签，或者form表单一起使用</span><br><span class="line">		action属性：写的是struts配置文件中action标签的name</span><br><span class="line">		namespace属性：如果action所在的packeage配置了namespace属性，那么就要将namespace属性写出来</span><br><span class="line">	 --&gt;</span><br><span class="line">	 &lt;a href&#x3D;&quot;&lt;s:url action&#x3D;&#39;deleteHello&#39;&gt;&lt;&#x2F;s:url&gt;&quot;&gt;测试surl标签&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">6.3 bean（熟悉）</span><br><span class="line">	&lt;!-- </span><br><span class="line">	 	s:bean 向值栈中保存一个数据(实例化一个类，然后存入值栈)</span><br><span class="line">	 	name属性：要实例化哪个类，就写哪个类的完全限定名</span><br><span class="line">	 	var属性：相当于存入request时的key值，在获取时使用</span><br><span class="line">	 	如果使用s:param标签对属性进行赋值的时候，要赋的值是除数字以外的其他任意类型，都要加单引号</span><br><span class="line">	  --&gt;</span><br><span class="line">	  &lt;s:bean name&#x3D;&quot;com.model.StuModel&quot; var&#x3D;&quot;stu&quot;&gt;</span><br><span class="line">	  	 &lt;!-- 给属性赋值 name为类中某个属性名，value则为要赋的值 --&gt;</span><br><span class="line">	  	 &lt;s:param name&#x3D;&quot;stuName&quot; value&#x3D;&quot;&#39;张三&#39;&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	  	 &lt;s:param name&#x3D;&quot;age&quot; value&#x3D;&quot;99&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	  &lt;&#x2F;s:bean&gt;</span><br><span class="line">	  </span><br><span class="line">	  &lt;h1&gt;s:bean标签：&lt;s:property value&#x3D;&quot;#stu&quot;&#x2F;&gt;&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">6.3 date（熟悉）</span><br><span class="line">&lt;!-- </span><br><span class="line">	  		s:date 格式化日期</span><br><span class="line">	  		name属性：要格式化的变量，获取的是值栈中的某个数据</span><br><span class="line">	  		format属性：格式化后的模板</span><br><span class="line">	  		nice属性：计算变量日期和系统当前差了多久</span><br><span class="line">	  		var属性：如果指定了var属性，那么不会将值在页面上直接显示，而是存入值栈</span><br><span class="line">	   --&gt;</span><br><span class="line">	   &lt;s:date name&#x3D;&quot;stuModel.birthday&quot; format&#x3D;&quot;yyyy-MM-dd&quot; var&#x3D;&quot;birthday&quot;&#x2F;&gt;</span><br><span class="line">	   &lt;h1&gt;&lt;s:property value&#x3D;&quot;#birthday&quot;&#x2F;&gt;&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">6.4 push（了解）</span><br><span class="line">&lt;!-- </span><br><span class="line">	   		s:push将一个变量推到值栈的栈顶</span><br><span class="line">	    --&gt;</span><br><span class="line">	    &lt;s:push value&#x3D;&quot;#stu&quot;&gt;</span><br><span class="line">	    	&lt;s:property value&#x3D;&quot;stuName&quot;&#x2F;&gt;</span><br><span class="line">	    &lt;&#x2F;s:push&gt;</span><br><span class="line"></span><br><span class="line">6.5 set（熟悉）</span><br><span class="line">&lt;!-- </span><br><span class="line">	    	s:set 创建一个普通的变量（单值类型），存入值栈（string,int）</span><br><span class="line">	    --&gt;</span><br><span class="line">	    &lt;s:set var&#x3D;&quot;setStr&quot; value&#x3D;&quot;&#39;创建一个字符串&#39;&quot;&gt;&lt;&#x2F;s:set&gt;</span><br><span class="line">	    &lt;h1&gt;set标签&lt;s:property value&#x3D;&quot;#setStr&quot;&#x2F;&gt;&lt;&#x2F;h1&gt;</span><br><span class="line"></span><br><span class="line">6.6 if-elseif-else（重要）</span><br><span class="line">		</span><br><span class="line">&lt;!--</span><br><span class="line">	    	 s:if标签  具备elseif 和  else</span><br><span class="line">	    	 test属性：编写判断条件，判断条件必须写在 %&#123;&#125;中，可以从值栈中获取某个值，然后进行相关判断</span><br><span class="line">	    --&gt;</span><br><span class="line">	    &lt;s:if test&#x3D;&quot;%&#123;stuModel.age &gt; 100&#125;&quot;&gt;</span><br><span class="line">	    	&lt;h1&gt;大于100&lt;&#x2F;h1&gt;</span><br><span class="line">	    &lt;&#x2F;s:if&gt;</span><br><span class="line">	    &lt;s:elseif test&#x3D;&quot;%&#123;stuModel.age &gt; 50&#125;&quot;&gt;</span><br><span class="line">	    	&lt;h1&gt;大于50&lt;&#x2F;h1&gt;</span><br><span class="line">	    &lt;&#x2F;s:elseif&gt;</span><br><span class="line">	    &lt;s:else&gt;</span><br><span class="line">	    	&lt;h1&gt;小于50&lt;&#x2F;h1&gt;</span><br><span class="line">	    &lt;&#x2F;s:else&gt;</span><br><span class="line"></span><br><span class="line">6.7 iterator（重要）</span><br><span class="line">&lt;!-- </span><br><span class="line">	    	s:iterator标签 （循环）</span><br><span class="line">	    	value属性：你要循环哪一个集合，从值栈中获取</span><br><span class="line">	    	var属性：每次循环时的变量，每次循环时会将本次循环的对象 赋值给i</span><br><span class="line">	    	如果说list集合中保存的单值类型变量，那么s:property可以不写value属性</span><br><span class="line">	    	status属性：用该属性可以获取循环的相关信息  在循环时会产生一个 IteratorStatus</span><br><span class="line">	    		       count 循环元素的个数</span><br><span class="line">	    		       index 当前元素的下标</span><br><span class="line">	    		       first 是否是第一个</span><br><span class="line">	    		       even  是否为偶数</span><br><span class="line">	    		       last  是否是最后一个</span><br><span class="line">	    		       odd   是否为奇数</span><br><span class="line">	    		                 使用方式  status&#x3D;&quot;status&quot;  &lt;s:property value&#x3D;&quot;#status.odd&quot;&#x2F;&gt;</span><br><span class="line">	    	begin属性：设置循环从哪一个元素开始，写的是元素的下标，从0开始</span><br><span class="line">	    	end属性：设置循环的结束位置，写的是元素下标，如果超出下标，会报错</span><br><span class="line">	    	step属性:步长 </span><br><span class="line">	     --&gt;</span><br><span class="line">	    &lt;s:iterator value&#x3D;&quot;strList&quot; var&#x3D;&quot;i&quot; status&#x3D;&quot;status&quot; begin&#x3D;&quot;0&quot; end&#x3D;&quot;2&quot; step&#x3D;&quot;2&quot;&gt;</span><br><span class="line">	    	&lt;h1&gt;&lt;s:property value&#x3D;&quot;#status.odd&quot;&#x2F;&gt;&lt;&#x2F;h1&gt;</span><br><span class="line">	    	&lt;s:if test&#x3D;&quot;%&#123;#status.odd&#125;&quot;&gt;</span><br><span class="line">	    		这是奇数行</span><br><span class="line">	    	&lt;&#x2F;s:if&gt;</span><br><span class="line">	    	&lt;s:property value&#x3D;&quot;#i&quot;&#x2F;&gt;</span><br><span class="line">	    &lt;&#x2F;s:iterator&gt;</span><br><span class="line">	    </span><br><span class="line">	    &lt;s:iterator value&#x3D;&quot;stuList&quot; var&#x3D;&quot;i&quot;&gt;</span><br><span class="line">	    	&lt;s:property value&#x3D;&quot;#i.stuName&quot;&#x2F;&gt;</span><br><span class="line">	    	&lt;s:property value&#x3D;&quot;#i.age&quot;&#x2F;&gt;</span><br><span class="line">	    &lt;&#x2F;s:iterator&gt;</span><br><span class="line"></span><br><span class="line">6.8 append（了解）</span><br><span class="line">&lt;!-- </span><br><span class="line">	    	s:append 追加，可将多个集合合并为一个集合，使用追加进行合并的话，可以保证顺序</span><br><span class="line">	     --&gt;</span><br><span class="line">	     &lt;s:append var&#x3D;&quot;append&quot;&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     &lt;&#x2F;s:append&gt;</span><br><span class="line">	     </span><br><span class="line">	     &lt;s:iterator value&#x3D;&quot;#append&quot;&gt;</span><br><span class="line">	     	&lt;s:property&#x2F;&gt;</span><br><span class="line">	     &lt;&#x2F;s:iterator&gt;</span><br><span class="line"></span><br><span class="line">6.9 merge（了解）</span><br><span class="line">&lt;!-- </span><br><span class="line">	     	s:merge 合并，可将多个集合合并为一个集合，不会保证顺序（会将原有顺序打乱）</span><br><span class="line">	     	合并规则：</span><br><span class="line">	     		将所有集合的第一条合并，将所有几个的第二条合并，以此类推</span><br><span class="line">	     		第一个集合的第一条，第二个集合的第一条，第N个集合的第一条</span><br><span class="line">	     		....</span><br><span class="line">	     	</span><br><span class="line">	     --&gt;</span><br><span class="line">	     &lt;s:merge var&#x3D;&quot;merge&quot;&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     	&lt;s:param value&#x3D;&quot;strList&quot;&gt;&lt;&#x2F;s:param&gt;</span><br><span class="line">	     &lt;&#x2F;s:merge&gt;</span><br><span class="line"></span><br><span class="line">		&lt;s:iterator value&#x3D;&quot;#merge&quot;&gt;</span><br><span class="line">	     	&lt;s:property&#x2F;&gt;</span><br><span class="line">	     &lt;&#x2F;s:iterator&gt;</span><br><span class="line"></span><br><span class="line">6.10 generator（熟悉）</span><br><span class="line">&lt;!-- </span><br><span class="line">	     	s:generator标签  将一个字符串，按照规则，拆分成一个数组，类似java中split方法</span><br><span class="line">	     	val属性：要分割的字符串</span><br><span class="line">	     	separator属性：分隔符</span><br><span class="line">	     	count属性：指定生成集合中元素的个数，如果该字符串截取后只能生成5个元素，但是count属性指定为了10</span><br><span class="line">	     	那么，会使用之前的元素进行补齐</span><br><span class="line">	     	var属性：将解析后的结果存入值栈</span><br><span class="line">	      --&gt;</span><br><span class="line">	      &lt;s:generator separator&#x3D;&quot;,&quot; val&#x3D;&quot;%&#123;&#39;aa,bb,cc,dd,ee&#39;&#125;&quot; var&#x3D;&quot;gen&quot; count&#x3D;&quot;10&quot;&gt;</span><br><span class="line">	      	 </span><br><span class="line">	      &lt;&#x2F;s:generator&gt;</span><br><span class="line">	      </span><br><span class="line">	      &lt;br&gt;</span><br><span class="line">	      &lt;s:iterator value&#x3D;&quot;#gen&quot;&gt;</span><br><span class="line">	      	&lt;s:property&#x2F;&gt;</span><br><span class="line">	      &lt;&#x2F;s:iterator&gt;</span><br><span class="line"></span><br><span class="line">6.11 subset（了解）</span><br><span class="line">&lt;!-- </span><br><span class="line">	      	 s:subset 对集合进行截取，然后生成一个子集合</span><br><span class="line">	      	 source属性：要截取的集合，从值栈中获取</span><br><span class="line">	      	 count属性：指定生成子集合中的元素个数，不指定的情况下，获取的是源集合中的所有元素</span><br><span class="line">	      	 start属性：指定从源集合中的第几个元素开始截取，默认从第一个开始截取，默认值为0</span><br><span class="line">	      	 decider属性：自定义选取逻辑，需要创建一个类，实现Decider接口，通过方法的返回值 来确定是否选取，如果true，则将该元素加入到子集合</span><br><span class="line">	      	 		           要保证该类的实例，在值栈中是存在的，必须要从值栈获取该类</span><br><span class="line">	      	 		           在取值时可以省略#</span><br><span class="line">	       --&gt;</span><br><span class="line">	       &lt;s:bean name&#x3D;&quot;com.action.MyDecider&quot; var&#x3D;&quot;myDecider&quot;&gt;&lt;&#x2F;s:bean&gt;</span><br><span class="line">	       &lt;br&gt;</span><br><span class="line">	       &lt;s:subset source&#x3D;&quot;stuList&quot; count&#x3D;&quot;2&quot; start&#x3D;&quot;1&quot; var&#x3D;&quot;subset&quot; decider&#x3D;&quot;#myDecider&quot;&gt;</span><br><span class="line">	       		&lt;s:iterator&gt;</span><br><span class="line">	       			&lt;s:property&#x2F;&gt;</span><br><span class="line">	       		&lt;&#x2F;s:iterator&gt;</span><br><span class="line">	       &lt;&#x2F;s:subset&gt;</span><br><span class="line"></span><br><span class="line">如果要使用标签的decider属性，实现自定义的选取规则，那么需要创建一个类，实现Struts的Decider接口，并且实现相关方法，在方法中可以自定义逻辑</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">6.12 action（熟悉）</span><br><span class="line">&lt;!-- </span><br><span class="line">		s:action 向一个action发起请求</span><br><span class="line">		name属性：要请求到某一个action的访问路径</span><br><span class="line">		var属性：相当于给这个action起个名字，然后通过名字可以获取action类中所有的全局变量</span><br><span class="line">	 --&gt;</span><br><span class="line">	&lt;s:action name&#x3D;&quot;executeHello&quot; var&#x3D;&quot;hello&quot;&gt;&lt;&#x2F;s:action&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;s:iterator value&#x3D;&quot;#hello.strList&quot;&gt;</span><br><span class="line">		&lt;s:property&#x2F;&gt;</span><br><span class="line">	&lt;&#x2F;s:iterator&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/06/SSM%E7%9A%84%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/" rel="next" title="SSM的框架搭建的配置信息">
+                <i class="fa fa-chevron-left"></i> SSM的框架搭建的配置信息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/14/Hibernate%E5%92%8CMybatis%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="prev" title="Hibernate和Mybatis的区别">
+                Hibernate和Mybatis的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

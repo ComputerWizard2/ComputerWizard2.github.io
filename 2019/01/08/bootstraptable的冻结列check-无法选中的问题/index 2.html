@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近公司使用的是bootstraptable ，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法：  你得理解冻结列的原理，冻结列实现的原理就是使用的表格复制，将原本的表格复制到上一层，自然新的一层的表格自带效果自然也就不起作用了，因为它失去了原本的事件绑定事件，所以自然复制的checkbox想通过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bootstraptable的冻结列check 无法选中的问题">
+<meta property="og:url" content="http://yoursite.com/2019/01/08/bootstraptable%E7%9A%84%E5%86%BB%E7%BB%93%E5%88%97check-%E6%97%A0%E6%B3%95%E9%80%89%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="最近公司使用的是bootstraptable ，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法：  你得理解冻结列的原理，冻结列实现的原理就是使用的表格复制，将原本的表格复制到上一层，自然新的一层的表格自带效果自然也就不起作用了，因为它失去了原本的事件绑定事件，所以自然复制的checkbox想通过">
+<meta property="article:published_time" content="2019-01-08T09:53:15.000Z">
+<meta property="article:modified_time" content="2019-01-08T09:54:04.000Z">
+<meta property="article:author" content="LuckYe">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/08/bootstraptable的冻结列check-无法选中的问题/"/>
+
+
+
+
+
+  <title>bootstraptable的冻结列check 无法选中的问题 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/08/bootstraptable%E7%9A%84%E5%86%BB%E7%BB%93%E5%88%97check-%E6%97%A0%E6%B3%95%E9%80%89%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bootstraptable的冻结列check 无法选中的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T17:53:15+08:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/08/bootstraptable%E7%9A%84%E5%86%BB%E7%BB%93%E5%88%97check-%E6%97%A0%E6%B3%95%E9%80%89%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/01/08/bootstraptable%E7%9A%84%E5%86%BB%E7%BB%93%E5%88%97check-%E6%97%A0%E6%B3%95%E9%80%89%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><h4 id="最近公司使用的是bootstraptable-，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法："><a href="#最近公司使用的是bootstraptable-，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法：" class="headerlink" title="最近公司使用的是bootstraptable ，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法："></a>最近公司使用的是bootstraptable ，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法：</h4></li>
+<li><ol>
+<li>你得理解冻结列的原理，冻结列实现的原理就是使用的表格复制，将原本的表格复制到上一层，自然新的一层的表格自带效果自然也就不起作用了，因为它失去了原本的事件绑定事件，所以自然复制的checkbox想通过原本的bootstraptable的getSellection 是不可能的，也就是说想使boot自带的getSelection 我们就要激活隐藏在上一层表格中的下一层表格：上源码，这篇文章主要是对冻结列问题，其他bootstrap table 的引入这里就不再赘述。</li>
+</ol>
+</li>
+<li>我主要使用checkbox的选中行，全选功能，已经通过输入选择确定的行，获取当前行的数据，通过网页的元素查看底层的生成表格的class或者name属性，并且对数据进行修改。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;选中行</span><br><span class="line">   	$(&#39;.fixed-table-container&#39;).on(&#39;click&#39;,&#39;tbody tr&#39;,function()&#123;</span><br><span class="line">   	&#x2F;&#x2F;添加选中的样式</span><br><span class="line">           $(this).addClass(&#39;on&#39;).siblings(&#39;tr&#39;).removeClass(&#39;on&#39;);</span><br><span class="line">           var tbodys &#x3D; $(this).parents(&#39;.fixed-table-container&#39;).find(&#39;table tbody&#39;)</span><br><span class="line">           var num &#x3D; $(this).index();</span><br><span class="line">           tbodys.each(function()&#123;</span><br><span class="line">               $(this).find(&#39;tr&#39;).eq(num).addClass(&#39;on&#39;).siblings(&#39;tr&#39;).removeClass(&#39;on&#39;);</span><br><span class="line">           &#125;);</span><br><span class="line">           oTable.ajax.reload();</span><br><span class="line">           oTable1.ajax.reload();</span><br><span class="line">           &#x2F;&#x2F;获取体检号</span><br><span class="line">           var physicalNum &#x3D; $.trim($(this).find(&#39;td:nth-child(2)&#39;).text());</span><br><span class="line">           getAttachTable(physicalNum)</span><br><span class="line"></span><br><span class="line">       &#125;);</span><br><span class="line"></span><br><span class="line">   	&#x2F;&#x2F;全选</span><br><span class="line">   	$(&#39;.fixed-table-container&#39;).on(&#39;click&#39;,&#39;input[name&#x3D;&quot;btSelectAll&quot;]&#39;,function()&#123;</span><br><span class="line">           if($(this).is(&#39;:checked&#39;))&#123;</span><br><span class="line">               $(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;).prop(&#39;checked&#39;,true);</span><br><span class="line">           &#125;else&#123;</span><br><span class="line">               $(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;).prop(&#39;checked&#39;,false);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;)</span><br><span class="line">       &#x2F;&#x2F;逐个选择</span><br><span class="line">       $(&#39;.fixed-table-container&#39;).on(&#39;click&#39;,&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;,function()&#123;</span><br><span class="line">           var inputs &#x3D; $(this).parents(&#39;.fixed-table-body-columns&#39;).find(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;)</span><br><span class="line">           var num &#x3D; 0;</span><br><span class="line">           inputs.each(function()&#123;</span><br><span class="line">               if($(this).is(&#39;:checked&#39;))&#123;</span><br><span class="line">                   num++;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">           if(num&#x3D;&#x3D;inputs.length)&#123;</span><br><span class="line">               $(&#39;input[name&#x3D;&quot;btSelectAll&quot;]&#39;).prop(&#39;checked&#39;,true);</span><br><span class="line">           &#125;else&#123;</span><br><span class="line">               $(&#39;input[name&#x3D;&quot;btSelectAll&quot;]&#39;).prop(&#39;checked&#39;,false);</span><br><span class="line">           &#125;</span><br><span class="line">           var index &#x3D; $(this).parents(&#39;tr&#39;).index();</span><br><span class="line">           &#x2F;&#x2F;对底层添加一个点击事件，激活底层的事件</span><br><span class="line">           $(&#39;#Table1&#39;).find(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;).eq(index).click();</span><br><span class="line">       &#125;);</span><br><span class="line">       </span><br><span class="line">       &#x2F;&#x2F;选择设置</span><br><span class="line">$(&quot;#confirm&quot;).click(function()&#123;</span><br><span class="line">	 var begin&#x3D;parseInt($(&quot;#begin&quot;).val())-1;</span><br><span class="line">	 var end&#x3D;parseInt($(&quot;#end&quot;).val());</span><br><span class="line">       var checks&#x3D;$(&quot;.checkitem&quot;)</span><br><span class="line"></span><br><span class="line">       var inputs &#x3D; $(&quot;.fixed-table-body-columns&quot;).find(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;);</span><br><span class="line">       var trs &#x3D; $(&quot;.fixed-table-body-columns&quot;).find(&#39;tr&#39;);</span><br><span class="line">       console.log(inputs);</span><br><span class="line">       var num &#x3D; 0;</span><br><span class="line">     for(var i&#x3D;begin;i&lt;end;i++)&#123;</span><br><span class="line">         num++;</span><br><span class="line">         $(inputs[i]).prop(&#39;checked&#39;,true);</span><br><span class="line">         $(trs[i]).addClass(&#39;on&#39;);</span><br><span class="line">             &#x2F;&#x2F;对底层添加一个点击事件，激活底层的事件</span><br><span class="line">         $(&#39;#Table1&#39;).find(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;).eq(i).click();</span><br><span class="line">         </span><br><span class="line">         $(&#39;#Table1 tbody&#39;).find(&#39;tr&#39;).eq(i).addClass(&#39;on&#39;);</span><br><span class="line">     &#125;</span><br><span class="line">       if(num&#x3D;&#x3D;inputs.length)&#123;</span><br><span class="line">           $(&#39;input[name&#x3D;&quot;btSelectAll&quot;]&#39;).prop(&#39;checked&#39;,true);</span><br><span class="line">       &#125;else&#123;</span><br><span class="line">           $(&#39;input[name&#x3D;&quot;btSelectAll&quot;]&#39;).prop(&#39;checked&#39;,false);</span><br><span class="line">       &#125;</span><br><span class="line">       &#x2F;&#x2F;var index &#x3D; $(this).parents(&#39;tr&#39;).index();</span><br><span class="line">       &#x2F;&#x2F;$(&#39;#Table1&#39;).find(&#39;input[name&#x3D;&quot;btSelectItem&quot;]&#39;).eq(index).click();</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	 $(&#39;#selectSet&#39;).modal(&#39;hide&#39;);</span><br><span class="line">	</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过对底层表格添加一个click事件，这样就可以对单个的checkbox通过getSelections也可以获取当前行的元素 。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/21/%E2%80%98%E5%85%B3%E4%BA%8EeasyPOI%E6%95%B4%E7%90%86/" rel="next" title="‘关于easyPOI整理">
+                <i class="fa fa-chevron-left"></i> ‘关于easyPOI整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/15/markdown%E7%9A%84%E7%A0%B4%E8%A7%A3/" rel="prev" title="关于markdown的licens">
+                关于markdown的licens <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#最近公司使用的是bootstraptable-，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法："><span class="nav-number">1.</span> <span class="nav-text">最近公司使用的是bootstraptable ，在这个过程中使用的冻结列，但是添加了冻结列之后，原本表格自带的checkbox无法使用，导致大部分功能失效，在网上查了很多的资料，最后找到一个办法：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

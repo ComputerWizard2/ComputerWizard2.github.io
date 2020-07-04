@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="首先下载插件：Activiti的插件这个插件主要通过你的流程图将其转化为xml的文件 Spring-mvc还是主要配置自动扫描和静态资源访问，视图解析器 Spring的文件主要配置自动扫描和数据源，事务管理，工作流的文件全局的配置  1234567891011121314151617181920212223242526272829303132&lt;bean id&#x3D;&quot;proc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于activiti的使用方法及大致流程">
+<meta property="og:url" content="http://yoursite.com/2018/01/06/%E5%85%B3%E4%BA%8Eactiviti%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%8F%8A%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="首先下载插件：Activiti的插件这个插件主要通过你的流程图将其转化为xml的文件 Spring-mvc还是主要配置自动扫描和静态资源访问，视图解析器 Spring的文件主要配置自动扫描和数据源，事务管理，工作流的文件全局的配置  1234567891011121314151617181920212223242526272829303132&lt;bean id&#x3D;&quot;proc">
+<meta property="article:published_time" content="2018-01-06T03:01:57.000Z">
+<meta property="article:modified_time" content="2018-01-06T03:02:30.000Z">
+<meta property="article:author" content="LuckYe">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/06/关于activiti的使用方法及大致流程/"/>
+
+
+
+
+
+  <title>关于activiti的使用方法及大致流程 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/%E5%85%B3%E4%BA%8Eactiviti%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%8F%8A%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于activiti的使用方法及大致流程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-06T11:01:57+08:00">
+                2018-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/06/%E5%85%B3%E4%BA%8Eactiviti%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%8F%8A%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/06/%E5%85%B3%E4%BA%8Eactiviti%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%8F%8A%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>首先下载插件：Activiti的插件这个插件主要通过你的流程图将其转化为xml的文件</li>
+<li>Spring-mvc还是主要配置自动扫描和静态资源访问，视图解析器</li>
+<li>Spring的文件主要配置自动扫描和数据源，事务管理，工作流的文件全局的配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id&#x3D;&quot;processEngineConfiguration&quot; class&#x3D;&quot;org.activiti.spring.SpringProcessEngineConfiguration&quot;&gt;</span><br><span class="line">        &lt;property name&#x3D;&quot;dataSource&quot; ref&#x3D;&quot;dataSource&quot; &#x2F;&gt;</span><br><span class="line">        &lt;!-- 增加事务管理器 --&gt;</span><br><span class="line">        &lt;property name&#x3D;&quot;transactionManager&quot; ref&#x3D;&quot;transactionManager&quot; &#x2F;&gt;</span><br><span class="line">		&lt;property name&#x3D;&quot;databaseSchemaUpdate&quot; value&#x3D;&quot;true&quot;&gt;&lt;&#x2F;property&gt;</span><br><span class="line">		&lt;!-- 流程文件存放位置 --&gt;</span><br><span class="line">        &lt;property name&#x3D;&quot;deploymentResources&quot;&gt;</span><br><span class="line">            &lt;list&gt;</span><br><span class="line">                &lt;value&gt;classpath:&#x2F;activiti&#x2F;*&lt;&#x2F;value&gt;</span><br><span class="line">            &lt;&#x2F;list&gt;</span><br><span class="line">        &lt;&#x2F;property&gt;</span><br><span class="line">    &lt;&#x2F;bean&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;bean id&#x3D;&quot;processEngine&quot; class&#x3D;&quot;org.activiti.spring.ProcessEngineFactoryBean&quot;&gt;</span><br><span class="line">		&lt;property name&#x3D;&quot;processEngineConfiguration&quot; </span><br><span class="line">			ref&#x3D;&quot;processEngineConfiguration&quot;&gt;&lt;&#x2F;property&gt;</span><br><span class="line">	&lt;&#x2F;bean&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 开发时所需要用的工作流相关service --&gt;</span><br><span class="line">	&lt;!-- </span><br><span class="line">		runtimeService 获取流程运行时的相关信息</span><br><span class="line">	 --&gt;</span><br><span class="line">	&lt;bean id&#x3D;&quot;runtimeService&quot; factory-bean&#x3D;&quot;processEngine&quot; </span><br><span class="line">		factory-method&#x3D;&quot;getRuntimeService&quot; &#x2F;&gt;</span><br><span class="line">	&lt;!-- taskService 获取任务用 --&gt;</span><br><span class="line">	&lt;bean id&#x3D;&quot;taskService&quot; factory-bean&#x3D;&quot;processEngine&quot;</span><br><span class="line">	    factory-method&#x3D;&quot;getTaskService&quot; &#x2F;&gt;</span><br><span class="line">	&lt;!-- identityService 获取用户相关信息 --&gt;</span><br><span class="line">	&lt;bean id&#x3D;&quot;identityService&quot; factory-bean&#x3D;&quot;processEngine&quot;</span><br><span class="line">		factory-method&#x3D;&quot;getIdentityService&quot; &#x2F;&gt;</span><br><span class="line">	 </span><br><span class="line">&lt;&#x2F;beans&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>webxml主要配置几个文件：一个是对Spring</li>
+<li>对于xml的流程的绘制activiti进行绘制大致的流程：在这个流程的过程中我们需要对相应的模块进行起名，并且配置基本的信息–&gt;${userId}类似于这样</li>
+<li>这里特别强调一下分支的这里有两个值pass—-&gt;value和nopass—-&gt; value 的值，这里分支的必须在使用的时候，就会将这两个值必须一起给出，单给任何一个都不会起作用</li>
+<li>登录功能，和原来一样，给出一个用户表</li>
+<li>获取登录的对象以后将获取到的用户的对象放入到session的里面，已被后面使用，</li>
+<li>这里未使用的是mybatis 所以要在这里配置一下我们的dao层的对象放入到ioc里面，这样他才能会发挥作用</li>
+<li>首先我们要进行插入数据，其实就是一些请假的基本信息，这里的我们先拥有数据在进行和工作流程的processId进行绑定</li>
+<li>如果想要获取服务的当前的任务的id我们需要创建一个map的集合进行保存，而且集合的格式必须按照Map&lt;String,Object &gt;的格式进行的</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,Object&gt; paramMap &#x3D; new HashMap&lt;String,Object&gt;();	paramMap.put(&quot;userId&quot;, loginUser.getId().toString());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开启的工作流程的方法时 ：</li>
+</ul>
+<p>返回值就是我们需要的工作流程的id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String proId &#x3D; runtimeService</span><br><span class="line">	.startProcessInstanceByKey</span><br><span class="line">		(&quot;myProcess&quot;,paramMap)</span><br><span class="line">		.getProcessInstanceId();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>再下一个的流程中需要我们的mannager的id所以我们需要在这个流程中插到manangerid</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Task task &#x3D; taskService.createTaskQuery().taskAssignee</span><br><span class="line">			(loginUser.getId().toString()).list().get(0);</span><br><span class="line">			&#x2F;&#x2F;签收</span><br><span class="line">			taskService.claim(task.getId(),</span><br><span class="line">						loginUser.getId().toString());</span><br><span class="line">			&#x2F;&#x2F;在完成时需要传递该员工部门领导的id，完成时会将下个任务直接指派给该领导</span><br><span class="line">			&#x2F;&#x2F;根据该员工查询到他的部门领导</span><br><span class="line">			Integer deptId &#x3D; usersDao.getDeptManagerId</span><br><span class="line">									(loginUser.getDeptId());</span><br><span class="line">			</span><br><span class="line"></span><br><span class="line">			&#x2F;&#x2F;完成任务，进入到下一个任务</span><br><span class="line">			taskService.complete(task.getId(),paramMap);</span><br><span class="line">			&#x2F;&#x2F;4.更新请假信息，将流程id和该数据绑定（关联）</span><br><span class="line">			leaveModel.setProcessId(Integer.parseInt(proId));</span><br><span class="line">			leaveDao.updateLeave(leaveModel);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对于jdbcTemplate的基本使用：<ul>
+<li>jdbcTemplate.queryForObject(sql语句，所需要的参数的object的数组，返回值类型)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">String sql &#x3D; &quot;insert into leaves(days,content,user_id) values(?,?,?)&quot;;</span><br><span class="line">		</span><br><span class="line">		KeyHolder keyHolder &#x3D; new GeneratedKeyHolder();</span><br><span class="line">		int r &#x3D; jdbcTemplate.update(new PreparedStatementCreator() &#123;</span><br><span class="line">			</span><br><span class="line">			@Override</span><br><span class="line">			public PreparedStatement createPreparedStatement(Connection conn)</span><br><span class="line">					throws SQLException &#123;</span><br><span class="line">				PreparedStatement ps &#x3D; </span><br><span class="line">						conn.prepareStatement</span><br><span class="line">						(sql,Statement.RETURN_GENERATED_KEYS);</span><br><span class="line">				ps.setInt(1, leaveModel.getDays());</span><br><span class="line">				ps.setString(2, leaveModel.getContent());</span><br><span class="line">				ps.setInt(3, leaveModel.getUserId());</span><br><span class="line">				return ps;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,keyHolder);</span><br></pre></td></tr></table></figure>
+<pre><code>- jdbcTemplate.update(sql，new object[]{参数})</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;public boolean updateLeave(LeaveModel leaveModel)&#123;</span><br><span class="line">		String sql &#x3D; &quot;update leaves set process_id &#x3D; ? where id &#x3D; ?&quot;;</span><br><span class="line">		int r &#x3D; jdbcTemplate.update(sql, </span><br><span class="line">				new Object[]&#123;</span><br><span class="line">					leaveModel.getProcessId(),leaveModel.getId()</span><br><span class="line">				&#125;);</span><br><span class="line">		if(r &#x3D;&#x3D; 1)&#123;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关于在在插入的时候我们就可以获取当前插入时的id</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public boolean insertLeave(LeaveModel leaveModel)&#123;</span><br><span class="line">	String sql &#x3D; &quot;insert into leaves(days,content,user_id) values(?,?,?)&quot;;</span><br><span class="line">	&#x2F;&#x2F;主要通过来获取这个值</span><br><span class="line">	KeyHolder keyHolder &#x3D; new GeneratedKeyHolder();</span><br><span class="line">	int r &#x3D; jdbcTemplate.update(new PreparedStatementCreator() &#123;</span><br><span class="line">		</span><br><span class="line">		@Override</span><br><span class="line">		public PreparedStatement createPreparedStatement(Connection conn)</span><br><span class="line">				throws SQLException &#123;</span><br><span class="line">			PreparedStatement ps &#x3D; </span><br><span class="line">					conn.prepareStatement</span><br><span class="line">					(sql,Statement.RETURN_GENERATED_KEYS);</span><br><span class="line">			ps.setInt(1, leaveModel.getDays());</span><br><span class="line">			ps.setString(2, leaveModel.getContent());</span><br><span class="line">			ps.setInt(3, leaveModel.getUserId());</span><br><span class="line">			return ps;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,keyHolder);</span><br><span class="line">	&#x2F;&#x2F;获取id</span><br><span class="line">	int id &#x3D; keyHolder.getKey().intValue();</span><br><span class="line">	leaveModel.setId(id);</span><br><span class="line">	if(r &#x3D;&#x3D; 1)&#123;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>处理任务：主要采用一个处理器，来处理两个个角色发过来的请求一个是技术总监和人事部，而人事部对于这个任务是一个群组任务，所以要进行签收，在进行处理，而技术总监属于个人任务所以直接进行处理complete();</p>
+<p>  taskService.complete(id.toString(), paramMap);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line">	 * 处理任务</span><br><span class="line">	 *&#x2F;</span><br><span class="line">	@RequestMapping(&quot;&#x2F;doTask&quot;)</span><br><span class="line">	public String doTask(@RequestParam(value&#x3D;&quot;taskId&quot;) Integer id,</span><br><span class="line">			@RequestParam(value&#x3D;&quot;accept&quot;) String accept)&#123;</span><br><span class="line">		</span><br><span class="line">		Map&lt;String, Object&gt; paramMap &#x3D; new HashMap&lt;String, Object&gt;();</span><br><span class="line">		if(accept.equals(&quot;yes&quot;))&#123;</span><br><span class="line">			paramMap.put(&quot;pass&quot;, true);</span><br><span class="line">			paramMap.put(&quot;nopass&quot;, false);</span><br><span class="line">			&#x2F;&#x2F;将该任务分配给人事部门， 成为一个公共任务，只要在人事部的员工，都可以看见</span><br><span class="line">			paramMap.put(&quot;deptId&quot;, &quot;2&quot;);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			paramMap.put(&quot;pass&quot;, false);</span><br><span class="line">			paramMap.put(&quot;nopass&quot;, true);</span><br><span class="line">			&#x2F;&#x2F;如果不同意，需要将该任务指派给填写申请的那个员工。去进行重新填写</span><br><span class="line">			&#x2F;&#x2F;要知道这个流程是哪一个员工发起的</span><br><span class="line">			&#x2F;&#x2F;根据task获取相关流程id</span><br><span class="line">			String proId &#x3D; taskService.createTaskQuery()</span><br><span class="line">						.taskId(id.toString()).singleResult()</span><br><span class="line">						.getProcessInstanceId();</span><br><span class="line">			&#x2F;&#x2F;通过proId去查询userId</span><br><span class="line">			paramMap.put(&quot;userId&quot;, </span><br><span class="line">					leaveDao.getUserId(proId).toString());</span><br><span class="line">		&#125;</span><br><span class="line">		&#x2F;&#x2F;处理任务</span><br><span class="line">		taskService.complete(id.toString(), paramMap);</span><br><span class="line">		return &quot;redirect:&#x2F;myTask&quot;;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>签收任务：claim</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line">	 * 签收任务</span><br><span class="line">	 *&#x2F;</span><br><span class="line">	@RequestMapping(&quot;&#x2F;doClaim&quot;)</span><br><span class="line">	public String doClaim(@RequestParam(value&#x3D;&quot;taskId&quot;) Integer id,</span><br><span class="line">			HttpSession session)&#123;</span><br><span class="line">		</span><br><span class="line">		UsersModel usersModel &#x3D; </span><br><span class="line">				(UsersModel) session.getAttribute(&quot;loginUser&quot;);</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;签收</span><br><span class="line">		taskService.claim(id.toString(),</span><br><span class="line">				usersModel.getId().toString());</span><br><span class="line">		</span><br><span class="line">		return &quot;redirect:&#x2F;myTask&quot;;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li>总结：我们采用的activiti的视图，通过它来生成xml，而框架的底层已经对于他自己建的表进行了到位的封装，所以我们需要调用他的service的方法我们就可以对数据库进行操作，通过数据在表中流向也就意味着工作到了哪一步的流程。 </li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/05/ssm%E5%85%B3%E4%BA%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E7%90%86%E8%A7%A3/" rel="next" title="ssm关于配置文件的理解">
+                <i class="fa fa-chevron-left"></i> ssm关于配置文件的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/06/SSM%E7%9A%84%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF/" rel="prev" title="SSM的框架搭建的配置信息">
+                SSM的框架搭建的配置信息 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

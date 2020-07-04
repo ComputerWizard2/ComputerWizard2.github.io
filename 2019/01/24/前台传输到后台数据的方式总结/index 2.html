@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相比大家都知道的吧，前后端交互的方法，反过来调过去的传输的也就那么几个，下面我来对几个方法介绍 一下，比较复杂的方法，主要是对批量或者多参数传递的方法： 后端设置的GET的方法的请求方式，这个时候我们只用通过的他的请求路径后面携带？+参数的这个方式传递参数，当然，你也可以采用在前段进行对象的封装，或者采用form表单的，最后进行serialize方法进行数据的格式化，将他放到请求路径后面，后端通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前台传输到后台数据的方式总结">
+<meta property="og:url" content="http://yoursite.com/2019/01/24/%E5%89%8D%E5%8F%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="相比大家都知道的吧，前后端交互的方法，反过来调过去的传输的也就那么几个，下面我来对几个方法介绍 一下，比较复杂的方法，主要是对批量或者多参数传递的方法： 后端设置的GET的方法的请求方式，这个时候我们只用通过的他的请求路径后面携带？+参数的这个方式传递参数，当然，你也可以采用在前段进行对象的封装，或者采用form表单的，最后进行serialize方法进行数据的格式化，将他放到请求路径后面，后端通">
+<meta property="article:published_time" content="2019-01-24T11:12:15.000Z">
+<meta property="article:modified_time" content="2019-01-24T11:12:49.000Z">
+<meta property="article:author" content="LuckYe">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/24/前台传输到后台数据的方式总结/"/>
+
+
+
+
+
+  <title>前台传输到后台数据的方式总结 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/%E5%89%8D%E5%8F%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前台传输到后台数据的方式总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T19:12:15+08:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/24/%E5%89%8D%E5%8F%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/01/24/%E5%89%8D%E5%8F%B0%E4%BC%A0%E8%BE%93%E5%88%B0%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>相比大家都知道的吧，前后端交互的方法，反过来调过去的传输的也就那么几个，下面我来对几个方法介绍 一下，比较复杂的方法，主要是对批量或者多参数传递的方法：</li>
+<li>后端设置的GET的方法的请求方式，这个时候我们只用通过的他的请求路径后面携带？+参数的这个方式传递参数，当然，你也可以采用在前段进行对象的封装，或者采用form表单的，最后进行serialize方法进行数据的格式化，将他放到请求路径后面，后端通过一个实体类或者请求参数进行接受就可以，大致的实现是这样的：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;前段的js代码</span><br><span class="line">&#x2F;&#x2F;报告的导出</span><br><span class="line">	$(&quot;#export&quot;).click(function()&#123;</span><br><span class="line">	&#x2F;&#x2F;这个是一个form表单对象</span><br><span class="line">		var condition&#x3D;$(&quot;#searcherCondition&quot;).serialize();</span><br><span class="line">		&#x2F;&#x2F;实现一个普通的请求</span><br><span class="line">		$.download(</span><br><span class="line">				&quot;$&#123;ctx&#125;&#x2F;ReportManager&#x2F;exportExcel&quot;,	</span><br><span class="line">				condition,</span><br><span class="line">				&quot;Get&quot;</span><br><span class="line">		);</span><br><span class="line">	&#125;);</span><br><span class="line">&#x2F;&#x2F;后端的java代码：</span><br><span class="line">&#x2F;&#x2F;这个是使用easypoi的到处excel的数据，所以需要的参数比较多，但是主要的参数主要是那个实体类dto,完成参数接收。有人可能会疑惑为什么我采用requestMapping的注解，没有指定GEt或者post的请求方法：这里说明一下request不会区分post和get方法，而这个方法取决于前段的请求。</span><br><span class="line">  @RequestMapping(&quot;exportExcel&quot;)</span><br><span class="line">    public void exportExcel(ModelMap map, HttpServletResponse response, HttpServletRequest request,PhysicalExaminerDto physicalExaminerDto)&#123;</span><br><span class="line">        PtYgbm00 principal &#x3D; (PtYgbm00)SecurityUtils.getSubject().getPrincipal();</span><br><span class="line">        physicalExaminerDto.setEmployeeId(principal.getYgbh00().toString());</span><br><span class="line">        physicalExaminerDto.setHospitalNo(principal.getYybh00());</span><br><span class="line">        List&lt;PhysicalExaminerPoi&gt; examinerPOI &#x3D; physicalExaminerService.getExaminerPOI(physicalExaminerDto);</span><br><span class="line">        ExportParams exportparams &#x3D; new ExportParams(&quot;体检者&quot;,&quot;体检者&quot;);</span><br><span class="line">        map.put(NormalExcelConstants.DATA_LIST, examinerPOI);</span><br><span class="line">        map.put(NormalExcelConstants.CLASS, PhysicalExaminerPoi.class);</span><br><span class="line">        map.put(NormalExcelConstants.FILE_NAME, &quot;体检者信息&quot;);</span><br><span class="line">        map.put(NormalExcelConstants.PARAMS, exportparams);</span><br><span class="line">        PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面的主要是通过form表单进行格式化后进行传输，相对我们不需要对参数格式进行设置，下面的我介绍的比较复杂，当然它既可以传输多个对象，也可以传输单个对象，相对比较灵活一点：</li>
+<li>前段代码：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;我们使用的bootstrap的datatable的，我们直接通过他封装的方法直接获取列表数据</span><br><span class="line">  var data&#x3D; $(&#39;#loseTable&#39;).bootstrapTable(&#39;getData&#39;);</span><br><span class="line"></span><br><span class="line">       if (data &#x3D;&#x3D;&#39;&#39;) &#123;</span><br><span class="line">           layer.msg(&#39;没有体检者&#39;);</span><br><span class="line">           return ;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       &#x2F;&#x2F;封装数据</span><br><span class="line">      </span><br><span class="line">      &#x2F;&#x2F;创建一个数组</span><br><span class="line">        var array &#x3D;new Array();</span><br><span class="line">         &#x2F;&#x2F;对数据进行封装遍历</span><br><span class="line">        $.each(data, function (index,value) &#123;</span><br><span class="line">             &#x2F;&#x2F;创建一个信息对象，来接受表单信息的所有的信息</span><br><span class="line">            var messageDto &#x3D; &#123;&#125;;</span><br><span class="line">            messageDto.content&#x3D;value.DXNR00;</span><br><span class="line">            messageDto.telephone&#x3D;value.DH0000;</span><br><span class="line">            &#x2F;&#x2F;放入到数组</span><br><span class="line">            array.push(messageDto);</span><br><span class="line">        &#125;);</span><br><span class="line">        &#x2F;&#x2F;对数组进行数据格式化</span><br><span class="line">        var result&#x3D;JSON.stringify(array);</span><br><span class="line">        &#x2F;&#x2F;这里必须强调一下我们只能通过ajax进行访问，其他的方式，都不能成功。</span><br><span class="line">       &#x2F;&#x2F;发起请求</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">            url:&quot;$&#123;ctx&#125;sendMesage&#x2F;batchSendMessage&quot;,</span><br><span class="line">            type:&quot;post&quot;,</span><br><span class="line">            async: false,</span><br><span class="line">            &#x2F;&#x2F;这里强调回数据格式为json</span><br><span class="line">            dateType:&#39;json&#39;,</span><br><span class="line">            &#x2F;&#x2F;强调内容类型</span><br><span class="line">            contentType:&#39;application&#x2F;json&#39;,</span><br><span class="line">            data :result,</span><br><span class="line">            &#x2F;&#x2F;返回结果</span><br><span class="line">            success:function (data) &#123;</span><br><span class="line">                if (data &#x3D;&#x3D;null||data.success &#x3D;&#x3D;false )&#123;</span><br><span class="line">                    layer.msg(&quot;发送失败！！&quot;);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                layer.msg(&#39;重发成功&#39;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>后端的java代码：这里是批量的发送短信的接口。这里值得强调的是那个注解@SpringBody必须要加的，这样就可以了。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;batchSendMessage&quot;)</span><br><span class="line">   @ResponseBody</span><br><span class="line">   public ResultMsg batchSendMessage(@RequestBody List&lt;MessageDto&gt; messageDto)throws  Exception&#123;</span><br><span class="line">       boolean interfaceInfo&#x3D;false;</span><br><span class="line">       Map&lt;Object,Object &gt; map &#x3D;new HashMap&lt;&gt;();</span><br><span class="line">       for(MessageDto ms:messageDto)&#123;</span><br><span class="line"></span><br><span class="line">       interfaceInfo &#x3D; baseMessage.getInterfaceInfo(ms);</span><br><span class="line">      &#125;</span><br><span class="line">       if (interfaceInfo)&#123;</span><br><span class="line">           return  ResultMsg.ok();</span><br><span class="line">       &#125;</span><br><span class="line">       return  ResultMsg.fail(&quot;失败&quot;);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/15/markdown%E7%9A%84%E7%A0%B4%E8%A7%A3/" rel="next" title="关于markdown的licens">
+                <i class="fa fa-chevron-left"></i> 关于markdown的licens
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/25/sql%E7%9A%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/" rel="prev" title="sql的方法总结">
+                sql的方法总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

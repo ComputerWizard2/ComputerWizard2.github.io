@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我将以下几个部分进行介绍bootstrap的这款表格控件：  引用部分bootstrap的部分js文件    12345678910&lt;script src&#x3D;&quot;$&amp;#123;ctx&amp;#125;plugins&#x2F;bootstrap-table&#x2F;bootstrap-table.min.js&quot;&gt;&lt;&#x2F;script&gt;&lt;%">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bootStrap的x-editorTable小结和mybatis逆向工程">
+<meta property="og:url" content="http://yoursite.com/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="我将以下几个部分进行介绍bootstrap的这款表格控件：  引用部分bootstrap的部分js文件    12345678910&lt;script src&#x3D;&quot;$&amp;#123;ctx&amp;#125;plugins&#x2F;bootstrap-table&#x2F;bootstrap-table.min.js&quot;&gt;&lt;&#x2F;script&gt;&lt;%">
+<meta property="article:published_time" content="2018-11-29T01:05:20.000Z">
+<meta property="article:modified_time" content="2018-11-29T01:06:33.000Z">
+<meta property="article:author" content="LuckYe">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/29/小结和mybatis逆向工程/"/>
+
+
+
+
+
+  <title>bootStrap的x-editorTable小结和mybatis逆向工程 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bootStrap的x-editorTable小结和mybatis逆向工程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-29T09:05:20+08:00">
+                2018-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>我将以下几个部分进行介绍bootstrap的这款表格控件：</li>
+<li><ol>
+<li>引用部分bootstrap的部分js文件</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;bootstrap-table.min.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;%--添加空白行--%&gt;</span><br><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;edittable&#x2F;mindmup-editabletable.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;%--添加新行可编辑状态js--%&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;extensions&#x2F;editable3&#x2F;js&#x2F;bootstrap-editable.min.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;extensions&#x2F;editable&#x2F;bootstrap-table-editable.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;locale&#x2F;bootstrap-table-zh-CN.min.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;extensions&#x2F;fixed-columns&#x2F;bootstrap-table-fixed-columns.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;%--bootstrap公共js--%&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ol start="2">
+<li>表格的初始化，通过一个回调函数创建表格：</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;组合查询</span><br><span class="line">    var TableInit1 &#x3D; function () &#123;</span><br><span class="line">        var oTableInit &#x3D; new Object();</span><br><span class="line">        &#x2F;&#x2F;初始化Table</span><br><span class="line">        oTableInit.Init &#x3D; function () &#123;</span><br><span class="line">            &#x2F;&#x2F;绑定到table的标签上</span><br><span class="line">            $(&quot;#Table1&quot;).bootstrapTable(&#123;</span><br><span class="line">            &#x2F;&#x2F;访问的接口</span><br><span class="line">                url : &quot;$&#123;ctx&#125;applicationProjectRelation&#x2F;getGroupSigle&quot;,</span><br><span class="line">                &#x2F;&#x2F;方式</span><br><span class="line">                type : &quot;GET&quot;,</span><br><span class="line">                &#x2F;&#x2F;数据格式</span><br><span class="line">                contentType: &quot;application&#x2F;json;charset&#x3D;utf-8&quot;,</span><br><span class="line">                pagination: true,&#x2F;&#x2F;分页</span><br><span class="line">                striped: true,&#x2F;&#x2F;是否显示行间隔色</span><br><span class="line">                cache:true,   &#x2F;&#x2F;是否使用缓存默认为true</span><br><span class="line">                sortable:false, &#x2F;&#x2F;是否启用排序</span><br><span class="line">                sortOrder:&#39;asc&#39;, &#x2F;&#x2F;排序方式</span><br><span class="line">                undefinedText:&#39;&#39;,</span><br><span class="line">                height:300,</span><br><span class="line">                onlyInfoPagination:true,</span><br><span class="line">                paginationDetailHAlign:&quot;right&quot; ,</span><br><span class="line">                sidePagination:&#39;server&#39;, &#x2F;&#x2F;分页方式：client客户端分页，server服务的分页</span><br><span class="line">                pageNumber: 1,      &#x2F;&#x2F;初始化加载第一页，默认第一页</span><br><span class="line">                pageSize: 10,       &#x2F;&#x2F;每页的记录行数</span><br><span class="line">                pageList: [5,10, 15, 20],&#x2F;&#x2F;可供选择的每页的行数</span><br><span class="line">                search:false,          &#x2F;&#x2F;是否显示表格搜索，此搜索是客户端搜索，不会进服务端</span><br><span class="line">                paginationPreText: &quot;上一页&quot;,</span><br><span class="line">                paginationNextText: &quot;下一页&quot;,</span><br><span class="line">                fixedColumns: false,&#x2F;&#x2F;固定列</span><br><span class="line">                fixedNumber:4,&#x2F;&#x2F;固定前两列</span><br><span class="line">                &#x2F;&#x2F;点击当前行触发的事件</span><br><span class="line">                onClickRow: function (row) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    $(&quot;#groupId&quot;).val(row.ZHXMID);</span><br><span class="line">                    $(&#39;#Table2&#39;).bootstrapTable(&#39;refresh&#39;);</span><br><span class="line"></span><br><span class="line">                &#125;,</span><br><span class="line"></span><br><span class="line">                </span><br><span class="line">                responseHandler:function (res) &#123;</span><br><span class="line"></span><br><span class="line">                    return res;</span><br><span class="line">                &#125;,</span><br><span class="line">                queryParams:oTableInit.queryParams,&#x2F;&#x2F;传递参数（*）</span><br><span class="line">                &#x2F;&#x2F;点击后checkbox会被选中，根据自己的需求是否需要</span><br><span class="line">                clickToSelect: true,</span><br><span class="line">                columns: [&#123;</span><br><span class="line">                    filed:&quot;Number&quot;,</span><br><span class="line">                    name:&quot;行号&quot;,</span><br><span class="line">                    formatter:function (value,rows,index) &#123;</span><br><span class="line">                        &#x2F;&#x2F;通过index的值来进行数据的初始化，和另外的表格进行关联关系</span><br><span class="line">                        if (index&#x3D;&#x3D;0)&#123;</span><br><span class="line">                            $(&quot;#groupId&quot;).val(rows.ZHXMID);</span><br><span class="line">                           &#x2F;&#x2F; $(&#39;#Table2&#39;).bootstrapTable(&#39;refresh&#39;);</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                        return index+1;</span><br><span class="line">                        </span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                &#125;,</span><br><span class="line">                </span><br><span class="line">                &#123;</span><br><span class="line">                    field: &#39;TXMQZ0&#39;,</span><br><span class="line">                    title: &#39;前缀&#39;,</span><br><span class="line"></span><br><span class="line">                    formatter: function (value, row, index) &#123;</span><br><span class="line">                        if (index &#x3D;&#x3D;0) &#123;</span><br><span class="line">                            $(&quot;#toBarId&quot;).val(row.TXMQZ0);</span><br><span class="line">                            $(&#39;#Table3&#39;).bootstrapTable(&#39;refresh&#39;);</span><br><span class="line">                            $(&#39;#Table4&#39;).bootstrapTable(&#39;refresh&#39;);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        return row.TXMQZ0;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    editable: &#123;</span><br><span class="line">                        type: &quot;text&quot;,</span><br><span class="line">                        separator:&quot;,&quot;,</span><br><span class="line">                        title: &quot;前缀&quot;,              &#x2F;&#x2F;编辑框的标题</span><br><span class="line">                        emptytext: &quot;无数据&quot;,</span><br><span class="line">                        disabled: false,             &#x2F;&#x2F;是否禁用编辑</span><br><span class="line">                        &#x2F;&#x2F;对输入的数据进行校验，可以进行静态校验，主要是一些js函数校验，也可以通过ajax进行动态校验</span><br><span class="line">                        validate: function (value,row,index) &#123;</span><br><span class="line">                            if (!value) return &#39;请输入前缀&#39;;</span><br><span class="line">                            if (isNaN(value)) return &#39;显示序号必须是数字&#39;;</span><br><span class="line">                            var flag&#x3D;&quot;&quot;;</span><br><span class="line">                            $.ajax(&#123;</span><br><span class="line">                                url:&quot;$&#123;ctx&#125;medicalTest&#x2F;getBarCode&quot;,</span><br><span class="line">                                type:&quot;post&quot;,</span><br><span class="line">                              data: &#123;&quot;id&quot;:value&#125;,</span><br><span class="line">                                async:false,</span><br><span class="line">                              success: function (data) &#123;</span><br><span class="line">                                    if (data &#x3D;&#x3D;null||data.success&#x3D;&#x3D;false)&#123;</span><br><span class="line">                                        flag &#x3D; data.msg;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                    return;</span><br><span class="line">                                &#125;</span><br><span class="line">                        &#125;);</span><br><span class="line"></span><br><span class="line">                            return flag;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                        &#x2F;&#x2F;行内的文本编辑</span><br><span class="line">                        field: &#39;XSXH00&#39;,</span><br><span class="line">                        title: &#39;显示序号&#39;,</span><br><span class="line">                        editable: &#123;</span><br><span class="line">                            type: &quot;text&quot;,</span><br><span class="line">                            separator:&quot;,&quot;,</span><br><span class="line">                            title: &quot;显示序号&quot;,              &#x2F;&#x2F;编辑框的标题</span><br><span class="line">                            emptytext: &quot;无数据&quot;,</span><br><span class="line">                            disabled: false,             &#x2F;&#x2F;是否禁用编辑</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#x2F;&#x2F;select的选择的编辑</span><br><span class="line">                     &#123;</span><br><span class="line">                        field: &#39;YYJY00&#39;,</span><br><span class="line">                        title: &#39;用于检验&#39;,</span><br><span class="line">                        editable: &#123;</span><br><span class="line">                            type: &quot;select&quot;,</span><br><span class="line">                            separator:&quot;,&quot;,</span><br><span class="line">                            source: [&#123; value: &#39;1&#39;, text: &#39;有效&#39; &#125;,</span><br><span class="line">                                &#123; value: &#39;0&#39;, text: &#39;无效&#39; &#125;],</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#x2F;&#x2F;bootstrap和select2的融合，虽然都是bootstrap家族的但是兼容性不是特别的好，只能传递文本，而id无法获取到，主要是通过ajax获取东塔的数据，给它的source，通过点击，将文本回显到表格中，但是id无法对应到id上，当发起请求进行表格提交的时候，id数据无法提交到后台</span><br><span class="line">                     &#123;</span><br><span class="line">                        field: &#39;CJKSMC&#39;,</span><br><span class="line">                        title: &#39;采集科室&#39;,</span><br><span class="line">                        editable: &#123;</span><br><span class="line">                            type: &#39;select2&#39;,</span><br><span class="line">                            title: &#39;采集科室&#39;,</span><br><span class="line">                            name : &#39;CJKSMC&#39;,</span><br><span class="line">                            source : function () &#123;&#x2F;&#x2F;动态获取数据</span><br><span class="line">                                var result &#x3D; [];</span><br><span class="line">                                $.ajax(&#123;</span><br><span class="line">                                    url : &quot;$&#123;ctx&#125;medicalTest&#x2F;getDept&quot;,</span><br><span class="line">                                    async : false,</span><br><span class="line">                                    type : &quot;get&quot;,</span><br><span class="line">                                    success : function(data) &#123;</span><br><span class="line">                                       &#x2F;&#x2F; console.log(data);</span><br><span class="line">                                        $.each(data.data,function(i,item)&#123;</span><br><span class="line">                                            var obj &#x3D; &#123;&#125;;</span><br><span class="line">                                            obj.id &#x3D;item.CJKSMC;</span><br><span class="line">                                            obj.text &#x3D; item.CJKSMC;</span><br><span class="line">                                            result.push(obj);</span><br><span class="line">                                        &#125;);</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;);</span><br><span class="line">                                return result;</span><br><span class="line">                            &#125;,</span><br><span class="line"></span><br><span class="line">                            select2 : &#123;</span><br><span class="line">                                &#x2F;&#x2F;tags:true,</span><br><span class="line">                                allowClear : true,</span><br><span class="line">                                language: &quot;zh-CN&quot;,</span><br><span class="line">                                placeholder: &#39;请选择&#39;,</span><br><span class="line">                                width : &#39;200px&#39;,&#x2F;&#x2F;设置宽</span><br><span class="line">                                id: function (item) &#123;</span><br><span class="line">                                    return item.id;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;,</span><br><span class="line">                            emptytext : &quot;暂无&quot;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                </span><br><span class="line">                </span><br><span class="line">                ]</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;得到查询的参数</span><br><span class="line">        oTableInit.queryParams &#x3D; function (params) &#123;</span><br><span class="line">            &#x2F;&#x2F; var dept&#x3D;&quot;&quot;;</span><br><span class="line">            &#x2F;&#x2F; if ($(&quot;#relevance&quot;).is(&quot;:checked&quot;))&#123;</span><br><span class="line">            &#x2F;&#x2F;     dept &#x3D; $(&quot;#choose&quot;).val();</span><br><span class="line">            &#x2F;&#x2F;</span><br><span class="line">            &#x2F;&#x2F; &#125;</span><br><span class="line">            &#x2F;&#x2F;主要是查询的条件的参数传递到后台</span><br><span class="line">            var temp &#x3D; &#123;   &#x2F;&#x2F;这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的</span><br><span class="line">        &#x2F;&#x2F;这个参数必须存在，主要后台使用的是mybatis的插件的pageHelper进行分页</span><br><span class="line">                offset: params.offset,&#x2F;&#x2F;当前页面,默认是上面设置的1(pageNumber)</span><br><span class="line">                limit: params.limit,&#x2F;&#x2F;每一页的数据行数，默认是上面设置的10(pageSize)</span><br><span class="line">               &#x2F;&#x2F; is:$(&quot;#tcid00&quot;).val(),</span><br><span class="line">                keywords:$(&quot;#keyword&quot;).val(),</span><br><span class="line">                isVolid:$(&quot;#isValid&quot;).val(),</span><br><span class="line">             &#x2F;&#x2F;   union:dept,</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; isuse:$(&quot;#isUse&quot;).val(),</span><br><span class="line">                &#x2F;&#x2F;  departmentID:departmentID</span><br><span class="line">            &#125;;</span><br><span class="line">            return temp;</span><br><span class="line">        &#125;;</span><br><span class="line">        return oTableInit;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页面初始化的加载这个表格</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var table11&#x3D; new  TableInit11();</span><br><span class="line">   table1.Init();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>表格标签的代码：我们使用data-formatter进行数据的转换加工，还有其他标签</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;table class&#x3D;&quot;table&quot; id&#x3D;&quot;Table5&quot;&gt;</span><br><span class="line">                                &lt;thead&gt;</span><br><span class="line">                                &lt;tr&gt;</span><br><span class="line">                                    &lt;th&gt;选择&lt;&#x2F;th&gt;</span><br><span class="line">                                    &lt;th data-field&#x3D;&quot;SFXMMC&quot;&gt;申请项目名称&lt;&#x2F;th&gt;</span><br><span class="line">                                    &lt;th data-field&#x3D;&quot;DCFSSM&quot;&gt;带出方式&lt;&#x2F;th&gt;</span><br><span class="line">                                    &lt;th data-field&#x3D;&quot;NX1&quot;  data-formatter&#x3D;&quot;getbatch&quot; data-events&#x3D;&quot;batch&quot;&gt;批量&lt;&#x2F;th&gt;</span><br><span class="line">                                    &lt;th data-field&#x3D;&quot;DJ0000&quot;&gt;单价&lt;&#x2F;th&gt;</span><br><span class="line">                                &lt;&#x2F;tr&gt;</span><br><span class="line">                                &lt;&#x2F;thead&gt;</span><br><span class="line">                                &lt;tbody&gt;</span><br><span class="line">                                &lt;&#x2F;tbody&gt;</span><br><span class="line">                            &lt;&#x2F;table&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>增加一个保存按钮</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;编辑按钮</span><br><span class="line">   function operateFormatter(value, row, index) &#123;</span><br><span class="line">       return [</span><br><span class="line">           &#39;&lt;a class&#x3D;&quot;edit&quot; href&#x3D;&quot;javascript:void(0)&quot; title&#x3D;&quot;保存&quot; id&#x3D;&quot;operatorItem&quot;&gt;&#39;,</span><br><span class="line">           &#39;&lt;i class&#x3D;&quot;glyphicon glyphicon-floppy-save&quot;&gt;&lt;&#x2F;i&gt;&#39;,</span><br><span class="line">           &#39;&lt;&#x2F;a&gt;  &#39;</span><br><span class="line">       ].join(&#39;&#39;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>给按钮绑定一个事件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;th data-field&#x3D;&quot;operator&quot;  data-events&#x3D;&quot;operater&quot;&gt;操作&lt;&#x2F;th&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>绑定相应的方法，主要是一个回调函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;这个就是自己绑定一个点击事件，这个可以是按钮或者是checkbox ，operator是data-events的id，operatorItem是绑定按钮的id，一般使用formatter转换的时候就对他进行id的绑定</span><br><span class="line">window.operater&#x3D; &#123;</span><br><span class="line">        &quot;click #operatorItem&quot;: function (e, value, rows, index) &#123;</span><br><span class="line">            var hmz&#x3D;&#123;&#125;;</span><br><span class="line">            hmz.txmqz0&#x3D;rows.TXMQZ0;</span><br><span class="line">            hmz.txmmc0&#x3D;rows.TXMMC0;</span><br><span class="line">            hmz.xsxh00&#x3D;rows.XSXH00;</span><br><span class="line">            hmz.sjxsxh&#x3D;rows.SJXSXH;</span><br><span class="line">            hmz.yxbz00&#x3D;rows.YXBZ00;</span><br><span class="line">            hmz.txmysz&#x3D;$(&quot;.color&quot;).eq(index).val().colorRgb();</span><br><span class="line">            hmz.yyjy00&#x3D;rows.YYJY00;</span><br><span class="line">            hmz.dyfs00&#x3D;rows.DYFS00;</span><br><span class="line">            hmz.dyybh0&#x3D;rows.DYYBH0;</span><br><span class="line">            hmz.mrcj00&#x3D;rows.MRCJ00;</span><br><span class="line">            hmz.sjsmts&#x3D;rows.SJSMTS;</span><br><span class="line">            hmz.smrqxg&#x3D;rows.SMRQXG;</span><br><span class="line">            hmz.keyworld&#x3D;rows.SFXMMC;</span><br><span class="line">            hmz.tsdymb&#x3D;rows.TSDYMB;</span><br><span class="line">            hmz.txmms0&#x3D;rows.TXMMS0;</span><br><span class="line">            hmz.txmcd0&#x3D;rows.TXMCD0;</span><br><span class="line">            hmz.djsfcj&#x3D;rows.DJSFCJ;</span><br><span class="line">            if ($(&quot;#insertflag&quot;).val()&#x3D;&#x3D;&#39;1&#39;)&#123;</span><br><span class="line">                &#x2F;&#x2F;新增</span><br><span class="line">                $.post(</span><br><span class="line">                    &quot;$&#123;ctx&#125;medicalTest&#x2F;insertBarcodeType&quot;,</span><br><span class="line">                        hmz,</span><br><span class="line">                     function (data) &#123;</span><br><span class="line">                         $(&quot;#insertflag&quot;).val()&#x3D;&#x3D;&#39;2&#39;</span><br><span class="line">                        $(&quot;#Table2&quot;).bootstrapTable(&quot;refresh&quot;);</span><br><span class="line">                     &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                hmz.yblxid&#x3D;rows.YBLXID;</span><br><span class="line">                &#x2F;&#x2F;更新</span><br><span class="line">                $.post(</span><br><span class="line">                    &quot;$&#123;ctx&#125;medicalTest&#x2F;updateBarcodeType&quot;,</span><br><span class="line">                        hmz,</span><br><span class="line">                            function (data) &#123;</span><br><span class="line">                                $(&quot;#insertflag&quot;).val()&#x3D;&#x3D;&#39;2&#39;</span><br><span class="line">                                $(&quot;#Table2&quot;).bootstrapTable(&quot;refresh&quot;);</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            )</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过插入新增一行，最后通过bootstrap的append添加到行尾</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$(&quot;#insert1&quot;).click(function ()&#123;</span><br><span class="line">        $(&quot;#insertflag&quot;).val(&quot;1&quot;);</span><br><span class="line"></span><br><span class="line">        var _data &#x3D; &#123;</span><br><span class="line">            &quot;TXMQZ0&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;TXMMC0&quot;:&quot;条形码名称&quot;,</span><br><span class="line">            &quot;XSXH00&quot;:&quot;显示序号&quot;,</span><br><span class="line">            &quot;SJXSXH&quot;:&quot;送检序号&quot;,</span><br><span class="line">            &quot;YXBZ00&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;TXMYSZ&quot;:&quot;0,0,0&quot;,</span><br><span class="line">            &quot;YYJY00&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;DYFS00&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;DYYBH0&quot;:&quot;N&quot;,</span><br><span class="line">            &quot;MRCJ00&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;SJSMTS&quot;:&quot;N&quot;,</span><br><span class="line">            &quot;SMRQXG&quot;:&quot;0&quot;,</span><br><span class="line">            &quot;SFXMMC&quot;:&quot;&quot;,</span><br><span class="line">            &quot;TSDYMB&quot;:&quot;&quot;,</span><br><span class="line">            &quot;TXMMS0&quot;:&quot;&quot;,</span><br><span class="line">            &quot;TXMCD0&quot;:&quot;&quot;,</span><br><span class="line">            &quot;DJSFCJ&quot;:&quot;0&quot;,</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        $(&quot;#Table&quot;).bootstrapTable(&#39;append&#39;, _data);&#x2F;&#x2F;_data-----&gt;新增的数据</span><br><span class="line">    &#125; );</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过上面添加的行列编辑属性，就可以对表格进行编辑，编辑完成，通过点击绑定的保存事件，获取正航的数据，传递到后台进行数据的保存</li>
+<li>下面我来介绍一下后台页面，我这里使用的是pagehelper的插件，需要页面出传递参数limit和offset：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;***</span><br><span class="line">   * 获取检查参数</span><br><span class="line">   * @param checkoutProgramDto</span><br><span class="line">   * @return</span><br><span class="line">   *&#x2F;</span><br><span class="line">      @RequestMapping(&quot;getCheckParameter&quot;)</span><br><span class="line">      @ResponseBody</span><br><span class="line">      public Map&lt;Object,Object&gt; getCheckParameter(CheckoutProgramDto checkoutProgramDto)&#123;</span><br><span class="line">          Map&lt;Object,Object&gt; map1 &#x3D;new HashedMap();</span><br><span class="line">          &#x2F;&#x2F;对pagehelper数据初始化</span><br><span class="line">          PageHelper.startPage(checkoutProgramDto.getOffset()&#x2F;checkoutProgramDto.getLimit()+1,checkoutProgramDto.getLimit());</span><br><span class="line">          String isSet &#x3D;checkoutProgramDto.getIsSet();</span><br><span class="line">          String keywords&#x3D;checkoutProgramDto.getKeywords();</span><br><span class="line">          PtYgbm00 principal &#x3D;(PtYgbm00) SecurityUtils.getSubject().getPrincipal();</span><br><span class="line">          String hospitolId&#x3D;principal.getYybh00();</span><br><span class="line">          &#x2F;&#x2F;后台获取数据</span><br><span class="line">          List&lt;HashMap&lt;Object, Object&gt;&gt; checkoutParam &#x3D; checkoutProgramService.getCheckoutParam(isSet, keywords, hospitolId);</span><br><span class="line">          &#x2F;&#x2F;生成pageInfo对象</span><br><span class="line">          PageInfo&lt;List&lt;HashMap&lt;Object, Object&gt;&gt;&gt; pageInfo &#x3D;new PageInfo(checkoutParam);</span><br><span class="line">          &#x2F;&#x2F;前端是rows和total</span><br><span class="line">          map1.put(&quot;rows&quot;,pageInfo.getList());</span><br><span class="line">          map1.put(&quot;total&quot;,pageInfo.getTotal());</span><br><span class="line">          return map1;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>我的查询的思想主要是，获取文本框的值，当点击按钮的时候，我们就刷新当前表格，这样我们的条件就会获取到传递到后台，获取到相应的结果。</li>
+<li>我在插入的时候使用的是mybatis 的orm框架，自动生成的，使用的时候，需要在实体类上添加@Id表示主键，  @KeySql使用序列来生成主键，这个主要用在oracle上，而mysql主要使用的@generateID 直接可以生成主键</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package org.physical.examination.model.systemManagement.professionalDictionary;</span><br><span class="line"></span><br><span class="line">import javax.persistence.*;</span><br><span class="line"></span><br><span class="line">import lombok.Data;</span><br><span class="line">import org.physical.examination.model.BaseEntity;</span><br><span class="line">import tk.mybatis.mapper.annotation.KeySql;</span><br><span class="line">import tk.mybatis.mapper.code.ORDER;</span><br><span class="line">@Data</span><br><span class="line">@Table(name &#x3D; &quot;TX_HM.HM_ZD_JYYBLX&quot;)</span><br><span class="line">public class HmZdJyyblx extends BaseEntity &#123;</span><br><span class="line">    @Id</span><br><span class="line">    @Column(name &#x3D; &quot;YBLXID&quot;)</span><br><span class="line">    @KeySql(sql &#x3D; &quot;select SQ_HM_ZD_JYYBLX_YBLXID.nextval from dual&quot;,order &#x3D; ORDER.BEFORE)</span><br><span class="line">    private Integer yblxid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在调用mybatis 自动生成的mapper来进行单表插入和更新的时候，他这里使用了通用的Mappertk.mybatis.mapper 通用mapper，来进行一般性的处理，一般调用的是insertSelective和updataPrinmarySelective进行更新，如果不是对数据库中的所有字段进行更新的时候，否则会报插入空指针的错误。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hmzdjyyblx.updateByPrimaryKeySelective(hmz);</span><br><span class="line"> hmzdjyyblx.insertSelective(hm);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>最近学到的也就这些，基本没有深入研究的后端框架，一直忙着搞前端框架，下一步打算学习一下shiro的安全框架，项目基本成熟，我只需要看懂来逐步深入了解。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/" rel="next" title="reorter与springboot 的整合">
+                <i class="fa fa-chevron-left"></i> reorter与springboot 的整合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/21/%E5%85%B3%E4%BA%8Ebootstrap%E7%9A%84%E5%89%8D%E7%AB%AF%E8%A1%A8%E6%A0%BC%E6%8E%A7%E4%BB%B6databel%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="关于bootstrap的前端表格控件databel的使用">
+                关于bootstrap的前端表格控件databel的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

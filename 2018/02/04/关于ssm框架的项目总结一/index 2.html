@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="debug 模式：看变量内部的值：shift+Alt +i shift+alt+H 全工程替换文件名 利用ajax实现异步上传图片并回显 实现ajiax实现  1234567891011121314151617181920212223242526272829303132333435363738394041package cn.itcast.common.web;import java.io.IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于ssm框架的项目总结一">
+<meta property="og:url" content="http://yoursite.com/2018/02/04/%E5%85%B3%E4%BA%8Essm%E6%A1%86%E6%9E%B6%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E4%B8%80/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="debug 模式：看变量内部的值：shift+Alt +i shift+alt+H 全工程替换文件名 利用ajax实现异步上传图片并回显 实现ajiax实现  1234567891011121314151617181920212223242526272829303132333435363738394041package cn.itcast.common.web;import java.io.IO">
+<meta property="article:published_time" content="2018-02-04T09:40:59.000Z">
+<meta property="article:modified_time" content="2018-02-04T09:42:25.000Z">
+<meta property="article:author" content="LuckYe">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/04/关于ssm框架的项目总结一/"/>
+
+
+
+
+
+  <title>关于ssm框架的项目总结一 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/04/%E5%85%B3%E4%BA%8Essm%E6%A1%86%E6%9E%B6%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于ssm框架的项目总结一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-04T17:40:59+08:00">
+                2018-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/04/%E5%85%B3%E4%BA%8Essm%E6%A1%86%E6%9E%B6%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E4%B8%80/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/02/04/%E5%85%B3%E4%BA%8Essm%E6%A1%86%E6%9E%B6%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E4%B8%80/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>debug 模式：看变量内部的值：shift+Alt +i</li>
+<li>shift+alt+H 全工程替换文件名</li>
+<li>利用ajax实现异步上传图片并回显</li>
+<li>实现ajiax实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">package cn.itcast.common.web;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * 异步返回各种格式</span><br><span class="line"> * json</span><br><span class="line"> * xml</span><br><span class="line"> * text</span><br><span class="line"> * @author lx</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ResponseUtils &#123;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;发送内容  </span><br><span class="line">	public static void render(HttpServletResponse response,String contentType,String text)&#123;</span><br><span class="line">		response.setContentType(contentType);</span><br><span class="line">		try &#123;</span><br><span class="line">			response.getWriter().write(text);</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			&#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F;发送的是JSON</span><br><span class="line">	public static void renderJson(HttpServletResponse response,String text)&#123;</span><br><span class="line">		render(response, &quot;application&#x2F;json;charset&#x3D;UTF-8&quot;, text);</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F;发送xml</span><br><span class="line">	public static void renderXml(HttpServletResponse response,String text)&#123;</span><br><span class="line">		render(response, &quot;text&#x2F;xml;charset&#x3D;UTF-8&quot;, text);</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F;发送text</span><br><span class="line">	public static void renderText(HttpServletResponse response,String text)&#123;</span><br><span class="line">		render(response, &quot;text&#x2F;plain;charset&#x3D;UTF-8&quot;, text);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上传图片：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;上传图片</span><br><span class="line">	@RequestMapping(value &#x3D; &quot;&#x2F;upload&#x2F;uploadPic.do&quot;)</span><br><span class="line">	public void uploadPic(@RequestParam(required &#x3D; false) MultipartFile pic,HttpServletResponse response)&#123;</span><br><span class="line">		&#x2F;&#x2F;扩展名</span><br><span class="line">		String ext &#x3D; FilenameUtils.getExtension(pic.getOriginalFilename());</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;图片名称生成策略</span><br><span class="line">		DateFormat df &#x3D; new SimpleDateFormat(&quot;yyyyMMddHHmmssSSS&quot;);</span><br><span class="line">		&#x2F;&#x2F;图片名称一部分</span><br><span class="line">		String format &#x3D; df.format(new Date());</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;随机三位数</span><br><span class="line">		Random r &#x3D; new Random();</span><br><span class="line">		&#x2F;&#x2F; n 1000   0-999   99</span><br><span class="line">		for(int i&#x3D;0 ; i&lt;3 ;i++)&#123;</span><br><span class="line">			format +&#x3D; r.nextInt(10);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;实例化一个Jersey</span><br><span class="line">		Client client &#x3D; new Client();</span><br><span class="line">		&#x2F;&#x2F;保存数据库</span><br><span class="line">		String path &#x3D; &quot;upload&#x2F;&quot; + format + &quot;.&quot; + ext;</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;另一台服务器的请求路径是?</span><br><span class="line">		String url &#x3D; Constants.IMAGE_URL  + path;</span><br><span class="line">		&#x2F;&#x2F;设置请求路径</span><br><span class="line">		WebResource resource &#x3D; client.resource(url);</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;发送开始  POST  GET   PUT</span><br><span class="line">		try &#123;</span><br><span class="line">			resource.put(String.class, pic.getBytes());</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			&#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		&#x2F;&#x2F;返回二个路径</span><br><span class="line">		JSONObject jo &#x3D; new JSONObject();</span><br><span class="line">		jo.put(&quot;url&quot;, url);</span><br><span class="line">		jo.put(&quot;path&quot;,path);</span><br><span class="line">		</span><br><span class="line">		ResponseUtils.renderJson(response, jo.toString());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页面的js</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">&#x2F;&#x2F;上传图片</span><br><span class="line">function uploadPic()&#123;</span><br><span class="line">	&#x2F;&#x2F;定义参数</span><br><span class="line">	var options &#x3D; &#123;</span><br><span class="line">		url : &quot;&#x2F;upload&#x2F;uploadPic.do&quot;,</span><br><span class="line">		dataType : &quot;json&quot;,</span><br><span class="line">		type :  &quot;post&quot;,</span><br><span class="line">		success : function(data)&#123;</span><br><span class="line">			&#x2F;&#x2F;回调 二个路径  </span><br><span class="line">			&#x2F;&#x2F;url</span><br><span class="line">			&#x2F;&#x2F;path</span><br><span class="line">			$(&quot;#allImgUrl&quot;).attr(&quot;src&quot;,data.url);</span><br><span class="line">			$(&quot;#path&quot;).val(data.path);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	</span><br><span class="line">	&#x2F;&#x2F;jquery.form使用方式</span><br><span class="line">	$(&quot;#jvForm&quot;).ajaxSubmit(options);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>批量删除</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 批量删除 --&gt;</span><br><span class="line">	&lt;delete id&#x3D;&quot;deleteBrandByKeys&quot; parameterType&#x3D;&quot;Integer&quot;&gt;</span><br><span class="line">		delete from bbs_brand</span><br><span class="line">		&lt;where&gt;</span><br><span class="line">			id in </span><br><span class="line">			&lt;foreach collection&#x3D;&quot;array&quot; item&#x3D;&quot;id&quot; open&#x3D;&quot;(&quot; close&#x3D;&quot;)&quot; separator&#x3D;&quot;,&quot; &gt;</span><br><span class="line">				#&#123;id&#125;</span><br><span class="line">			&lt;&#x2F;foreach&gt;</span><br><span class="line">		&lt;&#x2F;where&gt;</span><br><span class="line">	&lt;&#x2F;delete&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>实现批量删除</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;页面</span><br><span class="line">&lt;div style&#x3D;&quot;margin-top:15px;&quot;&gt;&lt;input class&#x3D;&quot;del-button&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;删除&quot; onclick&#x3D;&quot;optDelete(&#39;$&#123;name&#125;&#39;,&#39;$&#123;isDisplay &#125;&#39;);&quot;&#x2F;&gt;&lt;&#x2F;div&gt;</span><br><span class="line">&#x2F;&#x2F;删除批量</span><br><span class="line">function optDelete(name,isDisplay)&#123;</span><br><span class="line">	&#x2F;&#x2F;请选择一个</span><br><span class="line">	var s &#x3D; $(&quot;input[name&#x3D;&#39;ids&#39;]:checked&quot;).size();</span><br><span class="line"> 	if(s &lt;&#x3D; 0)&#123;</span><br><span class="line">		alert(&quot;请至少选择一个!&quot;);</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"> 	if(!confirm(&quot;你确定删除吗?&quot;))&#123;</span><br><span class="line"> 		return ;</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	&#x2F;&#x2F;删除</span><br><span class="line"> 	$(&quot;#jvForm&quot;).attr(&quot;action&quot;,&quot;&#x2F;brand&#x2F;deletes.do?name&#x3D;&quot; + name +&quot;&amp;isDisplay&#x3D;&quot; + isDisplay);</span><br><span class="line"> 	$(&quot;#jvForm&quot;).attr(&quot;method&quot;,&quot;post&quot;).submit();</span><br><span class="line"> 	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关于mybatis的优化总结：<ul>
+<li>主要是在实体类中设置一个字段来接受其他字段，这样就可以控制字段的查询，而在xml中我们使用${实体类.字段名}就可以取得相关的字段值，进行字段的查询</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">package cn.itcast.core.query.product;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * 品牌  查询专用对象</span><br><span class="line"> * @author lx</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class BrandQuery &#123;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	private Integer id;</span><br><span class="line">	private String name;</span><br><span class="line">	private String description;</span><br><span class="line">	private String imgUrl;</span><br><span class="line">	private Integer sort;</span><br><span class="line">	private Integer isDisplay;</span><br><span class="line">	public Integer getId() &#123;</span><br><span class="line">		return id;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setId(Integer id) &#123;</span><br><span class="line">		this.id &#x3D; id;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getName() &#123;</span><br><span class="line">		return name;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name &#x3D; name;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getDescription() &#123;</span><br><span class="line">		return description;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setDescription(String description) &#123;</span><br><span class="line">		this.description &#x3D; description;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getImgUrl() &#123;</span><br><span class="line">		return imgUrl;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setImgUrl(String imgUrl) &#123;</span><br><span class="line">		this.imgUrl &#x3D; imgUrl;</span><br><span class="line">	&#125;</span><br><span class="line">	public Integer getSort() &#123;</span><br><span class="line">		return sort;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setSort(Integer sort) &#123;</span><br><span class="line">		this.sort &#x3D; sort;</span><br><span class="line">	&#125;</span><br><span class="line">	public Integer getIsDisplay() &#123;</span><br><span class="line">		return isDisplay;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setIsDisplay(Integer isDisplay) &#123;</span><br><span class="line">		this.isDisplay &#x3D; isDisplay;</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;***********查询字段指定*************************************&#x2F;</span><br><span class="line">	private String fields;</span><br><span class="line">	public String getFields() &#123;</span><br><span class="line">		return fields;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setFields(String fields) &#123;</span><br><span class="line">		this.fields &#x3D; fields;</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;***********查询字段Like*************************************&#x2F;</span><br><span class="line">	private boolean nameLike;</span><br><span class="line">	public boolean isNameLike() &#123;</span><br><span class="line">		return nameLike;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setNameLike(boolean nameLike) &#123;</span><br><span class="line">		this.nameLike &#x3D; nameLike;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	&#x2F;***********order by *************************************&#x2F;</span><br><span class="line">	public class FieldOrder&#123;</span><br><span class="line">		private String field;  &#x2F;&#x2F;id , name  imgUrl</span><br><span class="line">		private String order;  &#x2F;&#x2F; desc asc</span><br><span class="line">		</span><br><span class="line">		public FieldOrder(String field, String order) &#123;</span><br><span class="line">			super();</span><br><span class="line">			this.field &#x3D; field;</span><br><span class="line">			this.order &#x3D; order;</span><br><span class="line">		&#125;</span><br><span class="line">		public String getField() &#123;</span><br><span class="line">			return field;</span><br><span class="line">		&#125;</span><br><span class="line">		public void setField(String field) &#123;</span><br><span class="line">			this.field &#x3D; field;</span><br><span class="line">		&#125;</span><br><span class="line">		public String getOrder() &#123;</span><br><span class="line">			return order;</span><br><span class="line">		&#125;</span><br><span class="line">		public void setOrder(String order) &#123;</span><br><span class="line">			this.order &#x3D; order;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F;orderby 集合</span><br><span class="line">	private List&lt;FieldOrder&gt; fieldOrders &#x3D; new ArrayList&lt;FieldOrder&gt;();</span><br><span class="line">	</span><br><span class="line">	&#x2F;&#x2F;按照Id排序</span><br><span class="line">	public void orderbyId(boolean isAsc)&#123;</span><br><span class="line">		fieldOrders.add(new FieldOrder(&quot;id&quot;,isAsc &#x3D;&#x3D; true ? &quot;asc&quot; : &quot;desc&quot;));</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	&#x2F;&#x2F;页号</span><br><span class="line">	private Integer pageNo &#x3D; 1;&#x2F;&#x2F;int</span><br><span class="line">	&#x2F;&#x2F;开始行</span><br><span class="line">	private Integer startRow;&#x2F;&#x2F;null</span><br><span class="line">	&#x2F;&#x2F;每页数</span><br><span class="line">	private Integer pageSize &#x3D; 10;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	public Integer getStartRow() &#123;</span><br><span class="line">		return startRow;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setStartRow(Integer startRow) &#123;</span><br><span class="line">		this.startRow &#x3D; startRow;</span><br><span class="line">	&#125;</span><br><span class="line">	public Integer getPageSize() &#123;</span><br><span class="line">		return pageSize;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setPageSize(Integer pageSize) &#123;</span><br><span class="line">		&#x2F;&#x2F;计算一次开始行</span><br><span class="line">		this.startRow &#x3D; (pageNo - 1)*pageSize;</span><br><span class="line">		this.pageSize &#x3D; pageSize;</span><br><span class="line">	&#125;</span><br><span class="line">	public Integer getPageNo() &#123;</span><br><span class="line">		return pageNo;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setPageNo(Integer pageNo) &#123;</span><br><span class="line">		&#x2F;&#x2F;计算一次开始行</span><br><span class="line">		this.startRow &#x3D; (pageNo - 1)*pageSize;</span><br><span class="line">		this.pageNo &#x3D; pageNo;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>mybatis 的优化设置主要用了${}进行取值：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- resultMap  --&gt;</span><br><span class="line">	&lt;resultMap type&#x3D;&quot;Brand&quot; id&#x3D;&quot;brand&quot;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;id&quot; property&#x3D;&quot;id&quot;&#x2F;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;name&quot; property&#x3D;&quot;name&quot;&#x2F;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;description&quot; property&#x3D;&quot;description&quot;&#x2F;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;img_url&quot; property&#x3D;&quot;imgUrl&quot;&#x2F;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;sort&quot; property&#x3D;&quot;sort&quot;&#x2F;&gt;</span><br><span class="line">		&lt;result column&#x3D;&quot;is_display&quot; property&#x3D;&quot;isDisplay&quot;&#x2F;&gt;</span><br><span class="line">	&lt;&#x2F;resultMap&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- brandSelector   fields  id,name   id   #&#123;id&#125; &#x3D;&#x3D; &quot;id&quot;  $&#123;id&#125; &#x3D;&#x3D; id     --&gt;</span><br><span class="line">	&lt;sql id&#x3D;&quot;brandSelector&quot;&gt;</span><br><span class="line">		select</span><br><span class="line">		&lt;if test&#x3D;&quot;fields !&#x3D; null&quot;&gt;</span><br><span class="line">			$&#123;fields&#125;</span><br><span class="line">		&lt;&#x2F;if&gt;</span><br><span class="line">		&lt;if test&#x3D;&quot;fields &#x3D;&#x3D; null&quot;&gt;</span><br><span class="line">			id , name ,description,img_url,sort,is_display</span><br><span class="line">		&lt;&#x2F;if&gt;</span><br><span class="line">		from bbs_brand</span><br><span class="line">	&lt;&#x2F;sql&gt;</span><br><span class="line">	&lt;!-- 品牌条件 --&gt;</span><br><span class="line">	&lt;sql id&#x3D;&quot;brandWhere&quot;&gt;</span><br><span class="line">		&lt;where&gt;</span><br><span class="line">			&lt;if test&#x3D;&quot;isDisplay !&#x3D; null&quot;&gt;</span><br><span class="line">				is_display &#x3D; #&#123;isDisplay&#125;</span><br><span class="line">			&lt;&#x2F;if&gt;</span><br><span class="line">			&lt;if test&#x3D;&quot;name !&#x3D; null&quot;&gt;</span><br><span class="line">				&lt;if test&#x3D;&quot;nameLike &#x3D;&#x3D; false&quot;&gt;</span><br><span class="line">					and name &#x3D; #&#123;name&#125;</span><br><span class="line">				&lt;&#x2F;if&gt;</span><br><span class="line">				&lt;if test&#x3D;&quot;nameLike &#x3D;&#x3D; true&quot;&gt;</span><br><span class="line">					and name like &quot;%&quot;#&#123;name&#125;&quot;%&quot;</span><br><span class="line">				&lt;&#x2F;if&gt;</span><br><span class="line">			&lt;&#x2F;if&gt;</span><br><span class="line">		&lt;&#x2F;where&gt;</span><br><span class="line">	&lt;&#x2F;sql&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 品牌 Order by --&gt;</span><br><span class="line">	&lt;sql id&#x3D;&quot;brandOrderBy&quot;&gt;</span><br><span class="line">		&lt;if test&#x3D;&quot;fieldOrders !&#x3D; null and fieldOrders.size &gt; 0&quot;&gt;</span><br><span class="line">			order by</span><br><span class="line">			&lt;foreach collection&#x3D;&quot;fieldOrders&quot; item&#x3D;&quot;fieldOrder&quot; separator&#x3D;&quot;,&quot;&gt;</span><br><span class="line">				$&#123;fieldOrder.field&#125; $&#123;fieldOrder.order&#125;</span><br><span class="line">			&lt;&#x2F;foreach&gt;</span><br><span class="line">		&lt;&#x2F;if&gt;</span><br><span class="line">	&lt;&#x2F;sql&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- limit --&gt;</span><br><span class="line">	&lt;sql id&#x3D;&quot;brandLimit&quot;&gt;</span><br><span class="line">		&lt;if test&#x3D;&quot;startRow !&#x3D; null&quot;&gt;</span><br><span class="line">			limit #&#123;startRow&#125;,#&#123;pageSize&#125;</span><br><span class="line">		&lt;&#x2F;if&gt;</span><br><span class="line">	&lt;&#x2F;sql&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 查询品牌集合 --&gt;</span><br><span class="line">	&lt;select id&#x3D;&quot;getBrandList&quot; parameterType&#x3D;&quot;BrandQuery&quot; resultMap&#x3D;&quot;brand&quot;&gt;</span><br><span class="line">		&lt;include refid&#x3D;&quot;brandSelector&quot;&#x2F;&gt;</span><br><span class="line">		&lt;include refid&#x3D;&quot;brandWhere&quot;&#x2F;&gt;</span><br><span class="line">		&lt;include refid&#x3D;&quot;brandOrderBy&quot;&#x2F;&gt;</span><br><span class="line">		&lt;include refid&#x3D;&quot;brandLimit&quot;&#x2F;&gt;</span><br><span class="line">	&lt;&#x2F;select&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>maven项目的不会 自带前斜杠/,而动态的web项目是自动加前斜杠的所以资源引用的时候要注意这一点</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/26/solr%E5%AE%9E%E7%8E%B0%E6%90%9C%E7%B4%A2%EF%BC%88%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%EF%BC%89/" rel="next" title="solr实现搜索（搜索引擎）">
+                <i class="fa fa-chevron-left"></i> solr实现搜索（搜索引擎）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/04/Springboot%E4%B9%8B%E7%AE%80%E5%8D%95%E7%9A%84%E9%85%8D%E7%BD%AE/" rel="prev" title="Springboot之简单的配置">
+                Springboot之简单的配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>

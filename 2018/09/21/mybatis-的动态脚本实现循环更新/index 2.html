@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我今天介绍一种循环更新的方式：从前端到后台的一整套流程实现循环更新：  后台更新代码： 123456789101112131415161718192021&lt;update id&#x3D;&quot;updateLoopSign&quot; parameterType&#x3D;&quot;java.util.List&quot;&gt;         &lt;foreach collec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis 的动态脚本实现循环更新">
+<meta property="og:url" content="http://yoursite.com/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/index.html">
+<meta property="og:site_name" content="LuckYe">
+<meta property="og:description" content="我今天介绍一种循环更新的方式：从前端到后台的一整套流程实现循环更新：  后台更新代码： 123456789101112131415161718192021&lt;update id&#x3D;&quot;updateLoopSign&quot; parameterType&#x3D;&quot;java.util.List&quot;&gt;         &lt;foreach collec">
+<meta property="article:published_time" content="2018-09-21T03:38:50.000Z">
+<meta property="article:modified_time" content="2018-09-21T08:32:59.000Z">
+<meta property="article:author" content="LuckYe">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/21/mybatis-的动态脚本实现循环更新/"/>
+
+
+
+
+
+  <title>mybatis 的动态脚本实现循环更新 | LuckYe</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+		
+	
+		<script type="text/javascript" 
+		color="0,255,0" opacity='1' zIndex="-2" count="200" 
+		src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/ComputerWizard2" target="_blank" rel="noopener"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LuckYe</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">世界因你而不同</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life">
+          <a href="/life/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            生活积累
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photo">
+          <a href="/photo/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-film"></i> <br />
+            
+            摄影
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LuckYe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/octocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuckYe">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mybatis 的动态脚本实现循环更新</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T11:38:50+08:00">
+                2018-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">技术总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><p>我今天介绍一种循环更新的方式：从前端到后台的一整套流程实现循环更新：</p>
+</li>
+<li><p>后台更新代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;update id&#x3D;&quot;updateLoopSign&quot; parameterType&#x3D;&quot;java.util.List&quot;&gt; </span><br><span class="line">        &lt;foreach collection&#x3D;&quot;list&quot; item&#x3D;&quot;item&quot; separator&#x3D;&quot;;&quot;  open&#x3D;&quot;begin&quot; close&#x3D;&quot;;end;&quot;&gt;</span><br><span class="line"> update HM_YW_TJJCXM A set ZZJB00 &#x3D; decode((select count(*)</span><br><span class="line">                                               from HM_YW_JCXMTZ</span><br><span class="line">                                              where TJH000 &#x3D; A.TJH000</span><br><span class="line">                                                and JCID00 &#x3D; A.JCID00</span><br><span class="line">                                                and nvl(ZZJB00, &#39;0&#39;) !&#x3D; 0),</span><br><span class="line">                                             0,</span><br><span class="line">                                             0,</span><br><span class="line">                                             1),</span><br><span class="line">        TZCMS0 &#x3D; #&#123;item.tzcms0&#125;,</span><br><span class="line">        SZJG00 &#x3D; &#39;&#39;, JCTZC0 &#x3D; SF_HM_GetTZC(JCID00)</span><br><span class="line">  where TJH000 &#x3D; $&#123;item.tjh000&#125;</span><br><span class="line">    and JCID00 &#x3D; $&#123;item.jcid00&#125;</span><br><span class="line">    and not exists (select 1</span><br><span class="line">           from HM_YW_TJFKJC</span><br><span class="line">          where TJH000 &#x3D; A.TJH000</span><br><span class="line">            and BMBH00 &#x3D; A.BMBH00</span><br><span class="line">            and KSSH00 &#x3D; &#39;1&#39;)</span><br><span class="line">        &lt;&#x2F;foreach&gt;</span><br><span class="line">&lt;&#x2F;update&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>中间层我就不赘述了，没啥太大价值的代码</p>
+</li>
+<li><p>主要好玩的就是前端利用js获取表格的每一行数据，并且封装成list的实体类传给后台，这个过程需要对数据格式化，并且后台数据的参数需要加上@RequestBody的注解，我在这个过程中踩了很多的坑</p>
+</li>
+<li><p>我觉的最好玩的就是通过数组来后台转化为好玩的list集合 </p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">var pphysicalExamNo &#x3D; $(&quot;#tjh000&quot;).val();</span><br><span class="line">	var deptNo&#x3D;$(&quot;#dqks&quot;).find(&quot;option:selected&quot;).val();</span><br><span class="line">	var littleConclution &#x3D; $(&quot;#xj&quot;).val();</span><br><span class="line">	&#x2F;&#x2F;遍历检查结果 和 检查id</span><br><span class="line">	var trs &#x3D; $(&#39;#sqtable tbody&#39;).find(&#39;tr&#39;);</span><br><span class="line">	&#x2F;&#x2F;获取值</span><br><span class="line">	var hmywtjjcxms &#x3D;new Array();</span><br><span class="line">	trs.each(function()&#123;</span><br><span class="line">		</span><br><span class="line">		var hmywtjjcxm &#x3D;&#123;&#125;;</span><br><span class="line">		&#x2F;&#x2F;获取每行的id值</span><br><span class="line">		hmywtjjcxm.tzcms0&#x3D;$(this).find(&quot;input[type&#x3D;&#39;text&#39;]&quot;).val();</span><br><span class="line">		hmywtjjcxm.jcid00&#x3D;$(this).find(&quot;input[type&#x3D;&#39;text&#39;]&quot;).attr(&#39;jcid00&#39;);</span><br><span class="line">		hmywtjjcxm.tjh000&#x3D;$(&quot;#tjh000&quot;).val();</span><br><span class="line">		hmywtjjcxms.push(hmywtjjcxm);</span><br><span class="line"></span><br><span class="line">	&#125;); </span><br><span class="line">	var result&#x3D;JSON.stringify(hmywtjjcxms);</span><br><span class="line">	 $.ajax(</span><br><span class="line">			 &#123;	</span><br><span class="line">				    type:&#39;POST&#39;,</span><br><span class="line">               		 url:&#39;$&#123;ctx&#125;departmentExaminationController&#x2F;checkIt&#39;,</span><br><span class="line">               	  	async: false,</span><br><span class="line">					dataType:&#39;json&#39;,</span><br><span class="line">					contentType:&#39;application&#x2F;json&#39;,</span><br><span class="line">					data:result,</span><br><span class="line">            	    success: function(data)&#123; </span><br><span class="line">            		  &#x2F;&#x2F;更新 小结</span><br><span class="line">            		  var ksxj00 &#x3D; $(&quot;#xj&quot;).val();</span><br><span class="line">            		  var ksys00&#x3D;$(&quot;#ys&quot;).attr(&quot;ysid&quot;);</span><br><span class="line">            		  var lrzid0 &#x3D;getEmployeeId();</span><br><span class="line">            		  var bmbh00&#x3D;$(&quot;#dqks&quot;).find(&quot;option:selected&quot;).val();</span><br><span class="line">            		  var pphysicalExamNo &#x3D; $(&quot;#tjh000&quot;).val();</span><br><span class="line">            			$.post(&quot;$&#123;ctx&#125;departmentExaminationController&#x2F;checkIt1&quot;,</span><br><span class="line">            					&#123;&quot;ksxj00&quot;:ksxj00,&quot;bmbh00&quot;:deptNo,&quot;tjh000&quot;:pphysicalExamNo,&quot;ksys00&quot;:ksys00&#125;,</span><br><span class="line">            					function(data)&#123;</span><br><span class="line">            						var writeIn&#x3D;$(&quot;#lry&quot;).attr(&quot;lryid&quot;);</span><br><span class="line">            						var doctor&#x3D;$(&quot;#ys&quot;).attr(&quot;ysid&quot;);</span><br><span class="line">            						 var bmbh00&#x3D;$(&quot;#dqks&quot;).find(&quot;option:selected&quot;).val();</span><br><span class="line">            				    	var tjh000&#x3D;$(&quot;#tjh000&quot;).val();</span><br><span class="line">            						&#x2F;&#x2F;执行审核</span><br><span class="line">            						$.post(</span><br><span class="line">            							&quot;$&#123;ctx&#125;departmentExaminationController&#x2F;checkIt2&quot;,	</span><br><span class="line">            							&#123;&quot;PTJH000&quot;:tjh000,&quot;PLRZID0&quot;:writeIn,&quot;PKSYS00&quot;:doctor,&quot;PBMBH00&quot;:bmbh00,&quot;POPFLAG&quot;:1&#125;,</span><br><span class="line">            							function(data)&#123;</span><br><span class="line">            								$(&quot;#control&quot;).val(1);</span><br><span class="line">            								$(&quot;#control&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line">            								$(&quot;.edit-tzcms0&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line">            								$(&quot;#xj&quot;).prop(&quot;disabled&quot;,true);</span><br><span class="line">            								getConclution(tjh000,bmbh00);</span><br><span class="line">            								&#x2F;&#x2F;$(&quot;#shsh&quot;).val(new data());</span><br><span class="line">            								alert(data.msg);</span><br><span class="line">            								</span><br><span class="line">            							&#125;</span><br><span class="line">            					);</span><br><span class="line">            					&#125;</span><br><span class="line">            			);   </span><br><span class="line">           		 &#125;</span><br><span class="line">           </span><br><span class="line">           </span><br><span class="line">	 			&#125;	 </span><br><span class="line">		);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过验证发现 springmvc对于传递json的对象转换过程仅仅可以传递对象类型仅为json格式的数据，其他的数据是不可以传递进去的</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@PostMapping(&quot;&#x2F;saveResult&quot;)</span><br><span class="line">	@ResponseBody</span><br><span class="line">	public ResultMsg saveResult(@RequestBody List&lt;HmYwTjjcxm&gt; list) &#123;</span><br><span class="line">		&#x2F;&#x2F; System.out.println(list);</span><br><span class="line">		&#x2F;&#x2F; List&lt;HmYwTjjcxm&gt; subList &#x3D; list.subList(0, 2);</span><br><span class="line">		for (HmYwTjjcxm hmYwTjjcxm : list) &#123;</span><br><span class="line">			String tzcms0 &#x3D; hmYwTjjcxm.getTzcms0();</span><br><span class="line">			if (&quot;&quot;.equals(tzcms0)) &#123;</span><br><span class="line">				continue;</span><br><span class="line">			&#125;</span><br><span class="line">			boolean numeric &#x3D; isNumeric(tzcms0);</span><br><span class="line">			if (numeric) &#123;</span><br><span class="line">				BigDecimal bd &#x3D; new BigDecimal(tzcms0);</span><br><span class="line">				hmYwTjjcxm.setSzjg00(bd);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		des.updateLoopSign(list);</span><br><span class="line">			return ResultMsg.ok();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/" rel="next" title="关于注解扫描获取类注解信息及对象实例">
+                <i class="fa fa-chevron-left"></i> 关于注解扫描获取类注解信息及对象实例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="前端插件select2的使用">
+                前端插件select2的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/octocat.png"
+                alt="LuckYe" />
+            
+              <p class="site-author-name" itemprop="name">LuckYe</p>
+              <p class="site-description motion-element" itemprop="description">随遇而安</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/COmputerWizard2" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ComputerWizard.no1@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/wizard" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LuckYe</span>
+
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+  
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="true"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: '54t7gSBfN7s9mLOu7JlM3YMQ-gzGzoHsz',
+        appKey: '0R3MWEuyPAQBJEFVhaKsoYgv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"left","width":200,"height":420},"mobile":{"show":true},"log":false});</script></body>
+</html>
