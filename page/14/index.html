@@ -82,7 +82,7 @@
 <meta name="description" content="随遇而安">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LuckYe">
-<meta property="og:url" content="http://yoursite.com/page/7/index.html">
+<meta property="og:url" content="http://yoursite.com/page/14/index.html">
 <meta property="og:site_name" content="LuckYe">
 <meta property="og:description" content="随遇而安">
 <meta property="article:author" content="LuckYe">
@@ -116,7 +116,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/7/"/>
+  <link rel="canonical" href="http://yoursite.com/page/14/"/>
 
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/01/%E5%85%B3%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LuckYe">
@@ -314,7 +314,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="url">bootStrap的x-editorTable小结和mybatis逆向工程</a></h1>
+                <a class="post-title-link" href="/2018/01/01/%E5%85%B3%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url">关于动态代理的设计模式</a></h1>
         
 
         <div class="post-meta">
@@ -326,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-29T09:05:20+08:00">
-                2018-11-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-01T11:56:47+08:00">
+                2018-01-01
               </time>
             
 
@@ -345,8 +345,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" itemprop="commentCount"></span>
+                <a href="/2018/01/01/%E5%85%B3%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/01/%E5%85%B3%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -408,17 +408,19 @@
         
           
           
-我将以下几个部分进行介绍bootstrap的这款表格控件：
+关于动态代理：
+本质和装饰者模式差不多，本质上都是对接口实现的加强：
+我们需要一个普通的接口：
 
-引用部分bootstrap的部分js文件
+123public interface Waiter &#123;	public void serve();&#125;
 
+实现这个接口的方法：
 
-
-12345678910&lt;script src&#x3D;&quot;$&#123;ctx&#125;plugins&#x2F;bootstrap-table&#x2F;bootstr
+12345public class MyWaiter
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/29/%E5%B0%8F%E7%BB%93%E5%92%8Cmybatis%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/#more" rel="contents">
+            <a class="btn" href="/2018/01/01/%E5%85%B3%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -469,7 +471,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/31/DBUtil%E5%90%91myBatis%E6%98%A0%E5%B0%84%E7%9A%84%E8%A7%A3%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LuckYe">
@@ -488,7 +490,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/" itemprop="url">reorter与springboot 的整合</a></h1>
+                <a class="post-title-link" href="/2017/12/31/DBUtil%E5%90%91myBatis%E6%98%A0%E5%B0%84%E7%9A%84%E8%A7%A3%E6%9E%90/" itemprop="url">DBUtil向myBatis映射的解析</a></h1>
         
 
         <div class="post-meta">
@@ -500,8 +502,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-12T13:27:42+08:00">
-                2018-11-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-31T11:45:42+08:00">
+                2017-12-31
               </time>
             
 
@@ -519,8 +521,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/" itemprop="commentCount"></span>
+                <a href="/2017/12/31/DBUtil%E5%90%91myBatis%E6%98%A0%E5%B0%84%E7%9A%84%E8%A7%A3%E6%9E%90/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/31/DBUtil%E5%90%91myBatis%E6%98%A0%E5%B0%84%E7%9A%84%E8%A7%A3%E6%9E%90/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -582,13 +584,13 @@
         
           
           
-最近使用report来进行报表的生成，使用步骤相对还是比较简单的，首先下载report的软件，该软件主要是制作文件格式的报表：
+其实本质上，这个DAButil和我所想的几乎是差不多的就是只不过考虑的更复杂而已，这个主要将这个分为了修改和查找两个部分，他就是利用数据的元数据，可以获取到数据替换参的个数，而元数据作为底层的更接触到数据的本质所以，对数据的类型并不会做特殊的要求所以，才会产生这样的结果。
 
-配置好数据库的驱动，该驱动是为report的软件服务的，本机使用的oracle 数据库所以配置的是odbc，只需要将相关的odbc的jar拷贝到report的数据的中。
+这个方法仅仅用于增删改
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/12/reorter%E4%B8%8Espringboot-%E7%9A%84%E6%95%B4%E5%90%88/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/DBUtil%E5%90%91myBatis%E6%98%A0%E5%B0%84%E7%9A%84%E8%A7%A3%E6%9E%90/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -639,7 +641,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/SpringMVC%E7%9A%84%E4%B9%9D%E5%A4%A7%E7%BB%84%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LuckYe">
@@ -658,7 +660,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/" itemprop="url">前端插件select2的使用</a></h1>
+                <a class="post-title-link" href="/2017/12/24/SpringMVC%E7%9A%84%E4%B9%9D%E5%A4%A7%E7%BB%84%E4%BB%B6/" itemprop="url">SpringMVC的九大组件</a></h1>
         
 
         <div class="post-meta">
@@ -670,8 +672,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-12T13:07:33+08:00">
-                2018-11-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T13:47:45+08:00">
+                2017-12-24
               </time>
             
 
@@ -689,8 +691,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/" itemprop="commentCount"></span>
+                <a href="/2017/12/24/SpringMVC%E7%9A%84%E4%B9%9D%E5%A4%A7%E7%BB%84%E4%BB%B6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/24/SpringMVC%E7%9A%84%E4%B9%9D%E5%A4%A7%E7%BB%84%E4%BB%B6/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -752,13 +754,16 @@
         
           
           
-1.引入相关的js文件
-
-123&lt;script src&#x3D;&quot;$&#123;ctx&#125;static&#x2F;plugins&#x2F;select2&#x2F;select2.full.js?v&#x3D;7&quot;&gt;&lt;&#x2F;script&gt
+multipartResolver 文件上传的解析器
+localeResolver 国际化解析器
+themeResolver 主题解析器
+handlerMapping 根据请求对象找到Hander处理器对象
+handlerAdapter 处理器的适配器
+handlerExceptionResolv
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/12/%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6select2%E7%9A%84%E4%BD%BF%E7%94%A8/#more" rel="contents">
+            <a class="btn" href="/2017/12/24/SpringMVC%E7%9A%84%E4%B9%9D%E5%A4%A7%E7%BB%84%E4%BB%B6/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -809,7 +814,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/Spring%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LuckYe">
@@ -828,7 +833,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/" itemprop="url">mybatis 的动态脚本实现循环更新</a></h1>
+                <a class="post-title-link" href="/2017/12/24/Spring%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" itemprop="url">Spring的配置文件</a></h1>
         
 
         <div class="post-meta">
@@ -840,8 +845,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T11:38:50+08:00">
-                2018-09-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T10:54:51+08:00">
+                2017-12-24
               </time>
             
 
@@ -851,30 +856,6 @@
           </span>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-            
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
-                    <span itemprop="name">技术总结</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -883,8 +864,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/" itemprop="commentCount"></span>
+                <a href="/2017/12/24/Spring%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/24/Spring%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -946,14 +927,10 @@
         
           
           
-我今天介绍一种循环更新的方式：从前端到后台的一整套流程实现循环更新：
-
-后台更新代码：
-123456789101112131415161718192021&lt;update id&#x3D;&quot;updateLoopSign&quot; parameterType&#x3D;&quot;j
-          ...
+          
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/mybatis-%E7%9A%84%E5%8A%A8%E6%80%81%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0/#more" rel="contents">
+            <a class="btn" href="/2017/12/24/Spring%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1004,7 +981,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/%E5%85%B3%E4%BA%8Eajax%E8%BF%9B%E8%A1%8Cjson%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8E%E7%AB%AF%E7%9A%84%E4%BA%A4%E4%BA%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LuckYe">
@@ -1023,7 +1000,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/" itemprop="url">关于注解扫描获取类注解信息及对象实例</a></h1>
+                <a class="post-title-link" href="/2017/12/21/%E5%85%B3%E4%BA%8Eajax%E8%BF%9B%E8%A1%8Cjson%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8E%E7%AB%AF%E7%9A%84%E4%BA%A4%E4%BA%92/" itemprop="url">关于ajax进行json的数据后端的交互</a></h1>
         
 
         <div class="post-meta">
@@ -1035,8 +1012,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-20T16:45:18+08:00">
-                2018-09-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T13:47:14+08:00">
+                2017-12-21
               </time>
             
 
@@ -1054,8 +1031,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/" itemprop="commentCount"></span>
+                <a href="/2017/12/21/%E5%85%B3%E4%BA%8Eajax%E8%BF%9B%E8%A1%8Cjson%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8E%E7%AB%AF%E7%9A%84%E4%BA%A4%E4%BA%92/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/21/%E5%85%B3%E4%BA%8Eajax%E8%BF%9B%E8%A1%8Cjson%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8E%E7%AB%AF%E7%9A%84%E4%BA%A4%E4%BA%92/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1117,13 +1094,16 @@
         
           
           
-calss获取接口的信息，class的工具类实现扫描 对应包下的接口的实现类
-
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859
+在json中
+对象—-&gt;{}对象
+集合list—&gt;[]数组
+ajax 的异步请求的格式：
+在这个中其实就是在为无论是Android端或者是web 端的提供一个数据的接口最后，最后将数据加工成统一的可识别的格式进行解析，达到数据传输的目的
+而这个ajax的传输，相对于表单的传输，具有可以
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/20/%E5%85%B3%E4%BA%8E%E6%B3%A8%E8%A7%A3%E6%89%AB%E6%8F%8F%E8%8E%B7%E5%8F%96%E7%B1%BB%E6%B3%A8%E8%A7%A3%E4%BF%A1%E6%81%AF%E5%8F%8A%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B/#more" rel="contents">
+            <a class="btn" href="/2017/12/21/%E5%85%B3%E4%BA%8Eajax%E8%BF%9B%E8%A1%8Cjson%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8E%E7%AB%AF%E7%9A%84%E4%BA%A4%E4%BA%92/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1165,7 +1145,7 @@ calss获取接口的信息，class的工具类实现扫描 对应包下的接口
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/8/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/13/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/15/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
